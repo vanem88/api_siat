@@ -24,8 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class TestPerformanceController {
 	
-	////////////////////PRUEBA PERFORMANCE PERSISTENCIAS//////////////////////
-    @Autowired
+	@Autowired
     ParticipanteRepository participanteRepository;
     
     @Autowired
@@ -37,8 +36,7 @@ public class TestPerformanceController {
     @Autowired
     AulaRepository AulaRepository;
     
-    private final static Logger logger = LoggerFactory.getLogger(AulaService.class);
-    
+    private final static Logger logger = LoggerFactory.getLogger(AulaService.class);    
     private Persistencia persistencia = null;   
     
     
@@ -93,9 +91,15 @@ public class TestPerformanceController {
     public String performanceHibernateParticipantesComision(@PathVariable("idComision") Long idComision) {  
     	logger.info("Servicio: performanceHibernateParticipantesComision "+idComision);
     	List<ParticipanteComisionEntity> participantes = participanteCRepository.findByComisionId(idComision);
-    	//List<ParticipanteEntity> participantes = participanteRepository.findAll();
     	return "Cantidad de participantes: "+participantes.size();
     }
+    
+	@GetMapping( path = "/getParticipantesSQLNativo/{idComision}")
+		public String getParticipantesSPRINGSQL(@PathVariable("idComision") Long idComision) { 
+		logger.info("Servicio: getParticipantesSPRINGSQL "+idComision+" "+idComision);
+		List<ParticipanteComisionEntity> participantes = participanteCRepository.participantesDeUnaComision(idComision);
+		return "participantes: "+participantes.size();
+	}
     
     
     @GetMapping( path = "/performanceTJDOParticipantesComision/{idComision}")
@@ -103,9 +107,7 @@ public class TestPerformanceController {
     	logger.info("Servicio: performanceTJDOParticipantesComision "+idComision);
         try{
 	    	this.iniciarPersistencia();
-			//String filtro="participante.persona.id == "+idPersona+" & comision.id == "+idComision;
-	    	String filtro="comision.id == "+idComision;
-			Vector participantes =  persistencia.getObjectosPorClaseYFiltro("persistencia.dominio.ParticipanteComision",filtro);
+			Vector participantes =  persistencia.getObjectosPorClaseYFiltro("persistencia.dominio.ParticipanteComision","comision.id == "+idComision);
 			this.commit();
 			return "Cantidad de participantes: "+participantes.size();
 		} catch (Exception e) {
@@ -183,6 +185,9 @@ public class TestPerformanceController {
 		}
 	}
 	
+		
+
+	
 	///////////////////////////////////////////////////////////////////
 	public void iniciarPersistencia(){
 		 try {
@@ -214,6 +219,8 @@ public class TestPerformanceController {
 			 return false;
 		 }
 	 }
+	 
+	 
 	    
 	   
   

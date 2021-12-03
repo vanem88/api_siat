@@ -7,10 +7,13 @@ import java.util.HashSet;
 
 public class MensajeDto implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	private Timestamp fecha;
    // private String titulo;
     private String contenido;
     private String persona;
+    private String pathFotoPerfil;
     private Collection<MensajeDto> mensajes = new HashSet();
     private String pathArchivo;
     
@@ -50,6 +53,13 @@ public class MensajeDto implements Serializable {
 	public void setPathArchivo(String pathArchivo) {
 		this.pathArchivo = pathArchivo;
 	}
+	public String getPathFotoPerfil() {
+		return pathFotoPerfil;
+	}
+	public void setPathFotoPerfil(String pathFotoPerfil) {
+		this.pathFotoPerfil = pathFotoPerfil;
+	}
+	
 	
 	
     

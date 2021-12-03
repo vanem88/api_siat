@@ -2,28 +2,16 @@ package com.evelia.api_siat.dto;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collection;
-
-import com.evelia.api_siat.entity.ArchivoEntity;
-import com.evelia.api_siat.entity.ComentarioEntity;
-import com.evelia.api_siat.entity.PersonaEntity;
-import com.evelia.api_siat.entity.TextoEntity;
 
 public class ComentarioDto implements Serializable {
 
-    private Timestamp fecha;
+	private static final long serialVersionUID = 1L;
+	
+	private Timestamp fecha;
     private String contenido;
     private String nombreApellidoPersona;
-    /*private Long archivoId;
-    private Long textoPadreId;
-    private Long comentPadreId;
-    private PersonaEntity personaByPersonaId;
-    private ArchivoEntity archivoByArchivoId;
-    private TextoEntity textoByTextoPadreId;
-    private ComentarioEntity comentarioByComentPadreId;
-    private Collection<ComentarioEntity> comentariosByComentarioId;*/
-    
-	
+    private String pathfotoperfil;
+  	
 	public Timestamp getFecha() {
 		return fecha;
 	}
@@ -42,6 +30,13 @@ public class ComentarioDto implements Serializable {
 	public void setNombreApellidoPersona(String nombreApellidoPersona) {
 		this.nombreApellidoPersona = nombreApellidoPersona;
 	}
+	public String getPathfotoperfil() {
+		return pathfotoperfil;
+	}
+	public void setPathfotoperfil(String pathfotoperfil) {
+		this.pathfotoperfil = pathfotoperfil;
+	}
+	
     
     
 }

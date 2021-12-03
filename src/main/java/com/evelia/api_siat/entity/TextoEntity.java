@@ -40,6 +40,7 @@ public class TextoEntity {
     private EstadoIntegracionEntity estadoIntegracionByEstadoId;
     private EventoRepeticionEntity eventoRepeticionByEventoRepeticionId;
     private Collection<VideoconferenciaEntity> videoconferenciasByTextoId;
+    private PublicacionEntity publicacionByPublicacionId;
 
     @Id
     @Column(name = "TEXTO_ID")
@@ -411,5 +412,16 @@ public class TextoEntity {
 
     public void setVideoconferenciasByTextoId(Collection<VideoconferenciaEntity> videoconferenciasByTextoId) {
         this.videoconferenciasByTextoId = videoconferenciasByTextoId;
+    }
+    
+   
+    @OneToOne
+    @JoinColumn(name = "PUBLICACION_ID", referencedColumnName = "PUBLICACION_ID", insertable=false, updatable=false)
+    public PublicacionEntity getPublicacionByPublicacionId() {
+        return this.publicacionByPublicacionId;
+    }
+
+    public void setPublicacionByPublicacionId(PublicacionEntity publicacionEntity) {
+        this.publicacionByPublicacionId = publicacionEntity;
     }
 }

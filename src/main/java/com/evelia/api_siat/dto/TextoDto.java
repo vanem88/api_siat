@@ -5,16 +5,20 @@ import java.util.Collection;
 
 public class TextoDto implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	private Long aulaId;
 	private Long id;
 	private String titulo;
 	private String contenido;
 	private Long idPersona;
 	private String nombreApellidoPersona;
+	private String pathFoto;
 	private java.sql.Timestamp fechaCreacion;
-	private java.sql.Timestamp fechaUltimaModificacion;
-	
-	
+	private java.sql.Timestamp fechaUltimaModificacion;	
+	private java.sql.Timestamp disponibleDesde;
+	private java.sql.Timestamp disponibleHasta;	
+	//Comentarios tiene el pizarron
 	private Collection<ComentarioDto> comentarios;
 	private String pathArchivo;
 	
@@ -80,6 +84,26 @@ public class TextoDto implements Serializable {
 	public void setAulaId(Long aulaId) {
 		this.aulaId = aulaId;
 	}
+	public String getPathFoto() {
+		return pathFoto;
+	}
+	public void setPathFoto(String pathFoto) {
+		this.pathFoto = pathFoto;
+	}
+	public java.sql.Timestamp getDisponibleDesde() {
+		return disponibleDesde;
+	}
+	public void setDisponibleDesde(java.sql.Timestamp disponibleDesde) {
+		this.disponibleDesde = disponibleDesde;
+	}
+	public java.sql.Timestamp getDisponibleHasta() {
+		return disponibleHasta;
+	}
+	public void setDisponibleHasta(java.sql.Timestamp disponibleHasta) {
+		this.disponibleHasta = disponibleHasta;
+	}
+	
+	
 
 	
 	

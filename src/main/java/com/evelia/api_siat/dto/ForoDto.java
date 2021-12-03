@@ -6,8 +6,12 @@ import java.util.Collection;
 
 public class ForoDto implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private long idAula;
 	private String asunto;
+	private String nombreAutor;
+	private String pathFotoPerfil;	
 	private Timestamp fechaCreacion;
     private Timestamp fechaDesde;
     private Timestamp fechaHasta;
@@ -65,6 +69,19 @@ public class ForoDto implements Serializable {
 	public void setIdAula(long idAula) {
 		this.idAula = idAula;
 	}
+	public String getNombreAutor() {
+		return nombreAutor;
+	}
+	public void setNombreAutor(String nombreAutor) {
+		this.nombreAutor = nombreAutor;
+	}
+	public String getPathFotoPerfil() {
+		return pathFotoPerfil;
+	}
+	public void setPathFotoPerfil(String pathFotoPerfil) {
+		this.pathFotoPerfil = pathFotoPerfil;
+	}
+	
 	
 	
 	

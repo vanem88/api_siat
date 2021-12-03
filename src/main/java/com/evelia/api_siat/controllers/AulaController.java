@@ -47,7 +47,7 @@ public class AulaController {
 	
 	/**
      * Este servicio devuelve todos los mensajes del pizarron de la comision en la que participa el usuario
-     * @param idAula por url
+     * @param idAula idUsuario
      * @return Json con todos los mensajes del pizarron
     */
 	@GetMapping( path = "/obtenerPizarron")

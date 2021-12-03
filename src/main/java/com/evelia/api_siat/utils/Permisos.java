@@ -14,7 +14,7 @@ import com.evelia.api_siat.repositories.PermisoAccesoRepository;
 @Service
 public class Permisos {
 	
-	 private final static Logger logger = LoggerFactory.getLogger(AssemblerObjetos.class);
+	 private final static Logger logger = LoggerFactory.getLogger(Permisos.class);
 	 
 	  @Autowired
 	  ParticipanteRepository participanteRepository;

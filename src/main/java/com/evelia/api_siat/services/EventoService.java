@@ -1,7 +1,7 @@
 package com.evelia.api_siat.services;
 
+import java.util.Collections;
 import com.evelia.api_siat.dto.EventoDto;
-import com.evelia.api_siat.dto.TextoDto;
 import com.evelia.api_siat.entity.AulaEntity;
 import com.evelia.api_siat.entity.ComisionEntity;
 import com.evelia.api_siat.entity.ParticipanteEntity;
@@ -12,7 +12,7 @@ import com.evelia.api_siat.repositories.ComisionRepository;
 import com.evelia.api_siat.repositories.ParticipanteRepository;
 import com.evelia.api_siat.repositories.PermisoAccesoRepository;
 import com.evelia.api_siat.repositories.TextoRepository;
-import com.evelia.api_siat.utils.AssemblerObjetos;
+import com.evelia.api_siat.utils.assembler.*;
 import com.evelia.api_siat.utils.Permisos;
 import com.evelia.api_siat.utils.constantes.RECURSOS;
 import com.evelia.api_siat.utils.constantes.TIPO_EVENTO;
@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
+import java.util.Comparator;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,11 +70,10 @@ public class EventoService {
 	        AulaEntity aula = aulaRepository.findById(idAula).get();
 	       	Long idCalendario = aula.getCalendarioId();
 	    	if(idCalendario!=null) {	    	
-	    		List<TextoEntity> eventosAula = textRepository.ComunicacionIdAndEliminadoAndFechaEventoAfterOrFechaEventoIsNull(idCalendario,false,fechaDesde);
-		    	logger.info("Cantidad de eventos del aula: "+eventosAula.size());
+	    		List<TextoEntity> eventosAula = textRepository.EventosDelCalendarioDisponibles(idCalendario,false,fechaDesde);
 		    	for (TextoEntity evento: eventosAula) {    	
 		    			//TextoDto eventoDto = AssemblerObjetos.EventoEntityToDto(evento);
-		    		    EventoDto eventoDto = AssemblerObjetos.EventoEntityToDto(evento);
+		    		    EventoDto eventoDto = AssemblerComunicacion.EventoEntityToDto(evento);
 						eventoDto.setTipoEventoNivel("E");//evento de aula
 						resultado.add(eventoDto);					
 		    	}
@@ -83,36 +84,37 @@ public class EventoService {
 	    	if(participantes.size()>0) {
    				ParticipanteEntity participante = participantes.get(0);     	
    				List<ComisionEntity> comisiones = comisionRepository.findDistinctByParticipanteComisionsByComisionIdParticipanteIdAndAulaByComisionIdAulaCompuestaId(participante.getParticipanteId(), idAula);
-   		       	    	
+   					
 		    	//List<AulaEntity> comisiones = aulaRepository.findDistinctByAulaCompuestaId(idAula);	    
 		    	//for (AulaEntity comision: comisiones) {
    				for (ComisionEntity comision: comisiones) {
 		    		//if (permisos.tienePermisoComision(idAula,comision.getAulaId(),idPersona,RECURSOS.CALENDARIO)) {
    					List<PermisoAccesoEntity> permisos = permisoAccesoRepository.findByRecursoByRecursoIdNombreAndAulaIdAndTipoUsuarioId(RECURSOS.CALENDARIO, comision.getComisionId(), participante.getTipoUsuarioId());
-		   			if(!permisos.isEmpty()) {
+   						
+   					if(!permisos.isEmpty()) {
 		    			//Long idCalendarioComision = comision.getCalendarioId();	    			
 		   				Long idCalendarioComision = comision.getAulaByComisionId().getCalendarioId();
 		    	    	if(idCalendarioComision!=null) {	    	
-		    	    		List<TextoEntity> eventosComision = textRepository.ComunicacionIdAndEliminadoAndFechaEventoAfterOrFechaEventoIsNull(idCalendarioComision,false,fechaDesde);
-		    	    		logger.info("Cantidad de eventos de la comision: "+eventosComision.size());	    	    		
-		    		    	for (TextoEntity eventoComision: eventosComision) {      		    						
-		    		    		EventoDto eventoComisionDto = AssemblerObjetos.EventoEntityToDto(eventoComision);
+		    	    		List<TextoEntity> eventosComision = textRepository.EventosDelCalendarioDisponibles(idCalendarioComision,false,fechaDesde);
+		    	    		for (TextoEntity eventoComision: eventosComision) {      		    						
+		    		    		EventoDto eventoComisionDto = AssemblerComunicacion.EventoEntityToDto(eventoComision);
 		    						eventoComisionDto.setTipoEventoNivel("EC");//evento de comision 
 		    						resultado.add(eventoComisionDto);				    					
 		    		    	}
-		    	    	}
-		    	    	break;
+		    	    	}		    	    	
 		    		}
 		    	}
 	    	}
 	    	
 	    	//Buscar los eventos personales
-	    	List<TextoEntity> eventosPersonales = textRepository.findByPersonaIdAndTipoEventoAndEliminadoAndFechaEventoAfter(idPersona,TIPO_EVENTO.PERSONALES, false, fechaDesde);
+	    	List<TextoEntity> eventosPersonales = textRepository.findByPersonaIdAndTipoEventoAndEliminadoAndFechaEventoAfterOrderByFechaDesc(idPersona,TIPO_EVENTO.PERSONALES, false, fechaDesde);
 	    	for (TextoEntity eventoPersonal: eventosPersonales) {    		    						
-	    		EventoDto eventoPersonalDto = AssemblerObjetos.EventoEntityToDto(eventoPersonal);
+	    		EventoDto eventoPersonalDto = AssemblerComunicacion.EventoEntityToDto(eventoPersonal);
 					eventoPersonalDto.setTipoEventoNivel("EP");//evento personal 
 					resultado.add(eventoPersonalDto);									
 	    	}
+	    	    	
+	    	Collections.sort(resultado, new SortByDateEvento());  	   	
 	    	    	
 	    	return resultado;	       
 	        
@@ -122,6 +124,25 @@ public class EventoService {
     	}
      }
     
+    /**
+     * Permite ordenar los eventos por su fecha de creacion.
+     */
+    static class SortByDateEvento implements Comparator<EventoDto> {
+        @Override
+        public int compare(EventoDto a, EventoDto b) {
+        	
+        	if(b.getFechaEvento()!=null && a.getFechaEvento()!=null)
+           	      return b.getFechaEvento().compareTo(a.getFechaEvento());
+        	else if(b.getFechaEvento()==null)
+        			return -1;
+        		else
+        			return 1;
+        }
+    }
+    
+    
+    
+   
     
   
 }

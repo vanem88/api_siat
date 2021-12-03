@@ -4,13 +4,14 @@ import java.io.Serializable;
 
 public class PersonaDto implements Serializable {
 
-	  private Long personaId;
-	  
-	  private String apellido;
-	  private String nombre;
-	  private String email;
-	  private String pathFoto;
-	  
+	private static final long serialVersionUID = 1L;
+
+	private Long personaId;
+    private String apellido;
+	private String nombre;
+	private String email;
+	private String pathFoto;
+  
 	  
 	public Long getId() {
 		return personaId;

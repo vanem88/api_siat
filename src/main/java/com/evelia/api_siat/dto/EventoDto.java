@@ -3,15 +3,16 @@ package com.evelia.api_siat.dto;
 import java.io.Serializable;
 import java.util.Collection;
 
-import com.evelia.api_siat.entity.ComentarioEntity;
-
 public class EventoDto implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private Long id;
 	private String titulo;
 	private String contenido;
 	private Long idPersona;
 	private String nombreApellidoPersona;
+	private String pathFoto;
 	private java.sql.Timestamp fechaCreacion;
 	//private java.sql.Timestamp fechaUltimaModificacion;
 	
@@ -122,6 +123,13 @@ public class EventoDto implements Serializable {
 	public void setPathArchivo(String pathArchivo) {
 		this.pathArchivo = pathArchivo;
 	}
+	public String getPathFoto() {
+		return pathFoto;
+	}
+	public void setPathFoto(String pathFoto) {
+		this.pathFoto = pathFoto;
+	}
+	
 
 	
 	

@@ -6,7 +6,9 @@ import java.util.HashSet;
 
 public class CarpetaDto implements Serializable {
 
-    private String nombre;
+	private static final long serialVersionUID = 1L;
+	
+	private String nombre;
     private Collection<ArchivoDto> archivos = new HashSet();
     private Collection<CarpetaDto> subcarpetas = new HashSet();
     

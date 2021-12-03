@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AulaCompuestaDto implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	@JsonProperty("id")
 	private long aulaCompuestaId;
 	private String nombre;   

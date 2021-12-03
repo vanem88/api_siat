@@ -1,14 +1,18 @@
-package com.evelia.api_siat.controllers;
+/*package com.evelia.api_siat.controllers;
 
 import com.evelia.api_siat.entity.ComisionEntity;
 import com.evelia.api_siat.entity.ParticipanteComisionEntity;
 import com.evelia.api_siat.entity.ParticipanteEntity;
+import com.evelia.api_siat.entity.PersonaEntity;
 import com.evelia.api_siat.repositories.ParticipanteComisionRepository;
 import com.evelia.api_siat.repositories.ParticipanteRepository;
+import com.evelia.api_siat.repositories.PersonaRepository;
 import com.evelia.api_siat.repositories.AulaRepository;
 import com.evelia.api_siat.repositories.ComisionRepository;
 import com.evelia.api_siat.services.AulaService;
 import persistencia.Persistencia;
+import persistencia.dominio.Persona;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -35,6 +39,9 @@ public class TestPerformanceController {
     
     @Autowired
     AulaRepository AulaRepository;
+    
+    @Autowired
+    PersonaRepository personaRepository;
     
     private final static Logger logger = LoggerFactory.getLogger(AulaService.class);    
     private Persistencia persistencia = null;   
@@ -99,8 +106,7 @@ public class TestPerformanceController {
 		logger.info("Servicio: getParticipantesSPRINGSQL "+idComision+" "+idComision);
 		List<ParticipanteComisionEntity> participantes = participanteCRepository.participantesDeUnaComision(idComision);
 		return "participantes: "+participantes.size();
-	}
-    
+	}    
     
     @GetMapping( path = "/performanceTJDOParticipantesComision/{idComision}")
     public String performanceTJDOParticipantesComision(@PathVariable("idComision") Long idComision) {  
@@ -138,7 +144,7 @@ public class TestPerformanceController {
     
     
     
-	///////////////////////////PARTICIPANTES DE UNA COMISION///////////////////////////////////////////////
+	///////////////////////////CANTIDAD DE  COMISIONES ///////////////////////////////////////////////
 	@GetMapping( path = "/getComisionesPersonaHIBERNATE")
 	public String getComisionesPersonaHIBERNATE(@RequestParam("idAula") Long idAula,@RequestParam("idPersona") Long idPersona) { 
 		logger.info("Servicio: getComisionesPersonaHIBERNATE "+idAula+" "+idPersona);
@@ -185,7 +191,47 @@ public class TestPerformanceController {
 		}
 	}
 	
-		
+	
+	
+	////////////ACTUALIZACION
+	///////////////////////////CANTIDAD DE  COMISIONES ///////////////////////////////////////////////
+	@PostMapping( path = "/actualizarUsuario")
+	public String actualizarUsuarioHibernate(@RequestParam("dni") Long id,@RequestParam("nombre") String nombre) { 
+		logger.info("Servicio: actualizarUsuario "+id+" "+nombre);
+		personaRepository.actualizarUsuario(id,nombre);
+		return "ok";
+	}
+
+	@PostMapping( path = "/actualizarUsuarioTJDO")
+	public String actualizarUsuarioTJDO(@RequestParam("dni") Long id,@RequestParam("nombre") String nombre) {  
+		logger.info("Servicio: actualizarUsuarioTJDO "+id+" "+nombre);
+		try{
+			this.iniciarPersistencia();			
+			Persona p = (Persona)persistencia.getObjectoPorId("persistencia.dominio.Persona", id);
+			p.setNombre(nombre);
+			this.commit();
+			return "ok";
+		} catch (Exception e) {
+			this.rollback();
+			return "exception";
+		}
+	}
+	
+	@PostMapping( path = "/actualizarUsuarioSQL")
+	public int actualizarUsuarioSQL(@RequestParam("dni") Long id,@RequestParam("nombre") String nombre) {  
+		logger.info("Servicio: actualizarUsuarioSQL "+id+" "+nombre);
+		try{
+			String connectionUrl = "jdbc:mysql://localhost:3306/datosEveliaMinimo?useUnicode=true&characterEncoding=utf8";
+			Connection  conect = DriverManager.getConnection(connectionUrl,"root","");
+			String SQL = "UPDATE PERSONA p SET p.NOMBRE = '"+nombre+"' WHERE p.ID = "+id; 
+			Statement stmt = conect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+			int rs = stmt.executeUpdate(SQL);
+			stmt.close();
+			return rs;
+		}catch (Exception e) {
+			return -1000000000;
+		}
+	}
 
 	
 	///////////////////////////////////////////////////////////////////
@@ -224,4 +270,4 @@ public class TestPerformanceController {
 	    
 	   
   
-}
+}*/

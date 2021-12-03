@@ -2,16 +2,20 @@ package com.evelia.api_siat.dto;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collection;
 
 public class CalificacionDto implements Serializable {
+	
+	
+	private static final long serialVersionUID = 1L;
 	
 	private Long idComision;
 	private String titulo;//Actividad, examen, autoexamen, cuestionario
 	private Timestamp fechaApertura;
 	private Timestamp fechaCierre;
 	private String autorCalificacion;
+	private String pathFotoAutorCalificacion;
 	private String personaRealizoEntrega;
+	private String pathFotoPersonaRealizoEntrega;
 	
 	private String estadoCalificacion;
 	private String calificacion;
@@ -78,6 +82,19 @@ public class CalificacionDto implements Serializable {
 	public void setFechaEntrega(Timestamp fechaEvtrega) {
 		this.fechaEntrega = fechaEvtrega;
 	}
+	public String getPathFotoAutorCalificacion() {
+		return pathFotoAutorCalificacion;
+	}
+	public void setPathFotoAutorCalificacion(String pathFotoAutorCalificacion) {
+		this.pathFotoAutorCalificacion = pathFotoAutorCalificacion;
+	}
+	public String getPathFotoPersonaRealizoEntrega() {
+		return pathFotoPersonaRealizoEntrega;
+	}
+	public void setPathFotoPersonaRealizoEntrega(String pathFotoPersonaRealizoEntrega) {
+		this.pathFotoPersonaRealizoEntrega = pathFotoPersonaRealizoEntrega;
+	}
+	
 	
 	
 	

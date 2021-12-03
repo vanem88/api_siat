@@ -26,12 +26,7 @@ public class EventoController {
 	    List<EventoDto> eventossDto = eventoService.eventosAulaDesdeFecha(idAula,idUsuario,fechaDesde);    
     	return eventossDto;		
     }
-	
-	
-	
-	
-	
-	    	
+	   	
 	
 }
 

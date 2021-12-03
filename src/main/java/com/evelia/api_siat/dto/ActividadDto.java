@@ -6,7 +6,8 @@ import java.sql.Timestamp;
 
 public class ActividadDto implements Serializable {
 	
-    private Long aulaId;
+  	private static final long serialVersionUID = 1L;
+	private Long aulaId;
     private String descripcion;
     private Timestamp fechaApertura;
     private Timestamp fechaCierre;
@@ -18,7 +19,8 @@ public class ActividadDto implements Serializable {
     private boolean borrador;
     private String detalles;
     //private Long notaAprobarId;
-    private Long personaId;
+    private String persona;
+    private String pathFotoPerfil;
     private String archivoAdjunto;
     
 	public Long getAulaId() {
@@ -93,18 +95,26 @@ public class ActividadDto implements Serializable {
 	public void setNotaAprobarId(Long notaAprobarId) {
 		this.notaAprobarId = notaAprobarId;
 	}*/
-	public Long getPersonaId() {
-		return personaId;
-	}
-	public void setPersonaId(Long personaId) {
-		this.personaId = personaId;
-	}
+	
 	public String getArchivoAdjunto() {
 		return archivoAdjunto;
 	}
 	public void setArchivoAdjunto(String archivoAdjunto) {
 		this.archivoAdjunto = archivoAdjunto;
 	}
+	public String getPersona() {
+		return persona;
+	}
+	public void setPersona(String persona) {
+		this.persona = persona;
+	}
+	public String getPathFotoPerfil() {
+		return pathFotoPerfil;
+	}
+	public void setPathFotoPerfil(String pathFotoPerfil) {
+		this.pathFotoPerfil = pathFotoPerfil;
+	}
+	
    
 	
 	

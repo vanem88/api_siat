@@ -4,6 +4,7 @@ import com.evelia.api_siat.dto.ActividadDto;
 import com.evelia.api_siat.dto.ArchivoDto;
 import com.evelia.api_siat.dto.AulaCompuestaDto;
 import com.evelia.api_siat.dto.CarpetaDto;
+import com.evelia.api_siat.dto.EventoDto;
 import com.evelia.api_siat.dto.ForoDto;
 import com.evelia.api_siat.dto.TextoDto;
 import com.evelia.api_siat.entity.ActividadArchivosAdjuntosEntity;
@@ -31,26 +32,19 @@ import com.evelia.api_siat.repositories.PermisoAccesoRepository;
 import com.evelia.api_siat.repositories.PublicacionRepository;
 import com.evelia.api_siat.repositories.TextoRepository;
 import com.evelia.api_siat.repositories.TipoUsuarioRepository;
-import com.evelia.api_siat.utils.AssemblerObjetos;
+import com.evelia.api_siat.utils.assembler.*;
 import com.evelia.api_siat.utils.Permisos;
 import com.evelia.api_siat.utils.constantes.RECURSOS;
 import com.evelia.api_siat.utils.constantes.TIPO_USUARIOS;
-
-import comun.constantes.ESTADO_AULAS;
-import comun.constantes.TIPO_AULAS;
-import persistencia.Persistencia;
-import persistencia.dominio.Persona;
-import utils.Utils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,7 +137,7 @@ public class AulaService {
     } 
         
     /**
-     * Devuelve todas las noticias del aula
+     * Devuelve todas las noticias del aula ordenadas por su fecha de apertura
      * @param idAula
      * @return Json List<NoticiaDto> 
     */
@@ -151,13 +145,19 @@ public class AulaService {
     	List<TextoDto> resultado = new ArrayList<TextoDto>();
     	try {
     		AulaEntity aula = aulaRepository.findByAulaId(idAula);    		
-    		Long idComunicacion = aula.getNovedadId();    		
-    		List<TextoEntity> noticias = textoRepository.findByComunicacionIdAndEliminadoOrderByFechaDesc(idComunicacion, false);
+    		Long idComunicacion = aula.getNovedadId();    	
+    		Long datetime = System.currentTimeMillis();
+    		Timestamp fechaHoy = new Timestamp(datetime);
+    		
+    		//List<TextoEntity> noticias = textoRepository.findByComunicacionIdAndEliminadoOrderByFechaDesc(idComunicacion, false);
+    		List<TextoEntity> noticias = textoRepository.ComunicacionesDisponibles(idComunicacion, false,fechaHoy);
+    		
     		for(TextoEntity noticia: noticias) {
-    			TextoDto noticiaDto = AssemblerObjetos.NoticiaPizarronEntityToDto(noticia);
+    			TextoDto noticiaDto = AssemblerComunicacion.NoticiaPizarronEntityToDto(noticia);
     			noticiaDto.setAulaId(idAula);
     			resultado.add(noticiaDto);
     		}
+    		
     		return resultado;    		
     	}catch(Exception ex) {
     		logger.error("Exception obtenerNoticias: "+ex.getMessage());
@@ -175,34 +175,52 @@ public class AulaService {
     	List<TextoDto> resultado = new ArrayList<TextoDto>();
     	try {
     		AulaEntity aula = aulaRepository.findById(idAula).get();
-    		//List<AulaEntity> comisiones = aulaRepository.findDistinctByAulaCompuestaId(idAula);
+    		Long datetime = System.currentTimeMillis();
+    		Timestamp fechaHoy = new Timestamp(datetime);
     		
     		List<ParticipanteEntity> participantes = participanteRepository.findByAulaIdAndPersonaId(idAula,idPersona); 
 	        if(participantes.size()>0) {
    				ParticipanteEntity participante = participantes.get(0);
    			    List<ComisionEntity> comisiones = comisionRepository.findDistinctByParticipanteComisionsByComisionIdParticipanteIdAndAulaByComisionIdAulaCompuestaId(participante.getParticipanteId(), idAula);
-		      	//for (AulaEntity comision: comisiones) {
 		        for (ComisionEntity comision: comisiones) {
-		       	//if (permisos.tienePermisoComision(idAula,comision.getAulaId(),idPersona,RECURSOS.PIZARRON)) {
 		        	List<PermisoAccesoEntity> permisos = permisoAccesoRepository.findByRecursoByRecursoIdNombreAndAulaIdAndTipoUsuarioId(RECURSOS.PIZARRON, comision.getComisionId(), participante.getTipoUsuarioId());
 		   			if(!permisos.isEmpty()) {		   					   				
-		        		//Long idComunicacion = comision.getPizarronId();
 		        	    Long idComunicacion = comision.getAulaByComisionId().getPizarronId();
-		        		List<TextoEntity> pizarrones = textoRepository.findByComunicacionIdAndEliminadoOrderByFechaDesc(idComunicacion, false);
+		        		//List<TextoEntity> pizarrones = textoRepository.findByComunicacionIdAndEliminadoOrderByFechaDesc(idComunicacion, false);
+		        	    List<TextoEntity> pizarrones = textoRepository.ComunicacionesDisponibles(idComunicacion, false,fechaHoy);
+		        	    
 		        		for(TextoEntity pizarron: pizarrones) {
-		        			TextoDto pizarronDto = AssemblerObjetos.NoticiaPizarronEntityToDto(pizarron);
+		        			TextoDto pizarronDto = AssemblerComunicacion.NoticiaPizarronEntityToDto(pizarron);
 		        			pizarronDto.setAulaId(comision.getComisionId());
 		        			resultado.add(pizarronDto);
 		        		}	        		
 		    		}
 		    	}   		
 	    	}
+	        
+	        Collections.sort(resultado, new SortByDatePizarron()); 
     		return resultado;    		
     	}catch(Exception ex) {
-    		logger.error("Exception obtenerNoticias: "+ex.getMessage());
+    		logger.error("Exception obtenerMensajesPizarron: "+ex.getMessage());
 			return resultado;
 		}    	
     }
+    
+    /**
+     * Permite ordenar los eventos por su fecha de creacion.
+     */
+    static class SortByDatePizarron implements Comparator<TextoDto> {
+        @Override
+        public int compare(TextoDto a, TextoDto b) {
+          	if(b.getDisponibleDesde()!=null && a.getDisponibleDesde()!=null)
+         	      return b.getDisponibleDesde().compareTo(a.getDisponibleDesde());
+          	else if(b.getDisponibleDesde()==null)
+      			return -1;
+      		else
+      			return 1;
+        }
+    }
+    
     
     
     /**
@@ -221,6 +239,10 @@ public class AulaService {
 	        //Busca las actividades de la comision en la que participa el usuario
 	        //AulaEntity aula = aulaRepository.findById(idAula).get();	        
 	    	//List<AulaEntity> comisiones = aulaRepository.findDistinctByAulaCompuestaId(idAula);	
+	        
+	        Long datetime = System.currentTimeMillis();
+    		Timestamp fechaHoy = new Timestamp(datetime);
+    		
 	    		    	
 	    	List<ParticipanteEntity> participantes = participanteRepository.findByAulaIdAndPersonaId(idAula,idPersona); 
 	    	if(participantes.size()>0) {
@@ -242,9 +264,11 @@ public class AulaService {
 		    					resultado.add(actividadComisionDto);				    					
 		    		    	}
 		    	    	}*/
-		   				List<ActividadEntity> actividadesComision = actividadRepository.findDistinctByAulaId(comision.getComisionId());
+		   				//List<ActividadEntity> actividadesComision = actividadRepository.findDistinctByAulaId(comision.getComisionId());
+		   				List<ActividadEntity> actividadesComision = actividadRepository.ActividadesDisponibles(comision.getComisionId(),fechaHoy);
+		   				
 		   				for (ActividadEntity actividadComision: actividadesComision) {      		    						
-		   					ActividadDto actividadComisionDto = AssemblerObjetos.ActividadEntityToDto(actividadComision);
+		   					ActividadDto actividadComisionDto = AssemblerCalificacion.ActividadEntityToDto(actividadComision);
 		   					ActividadArchivosAdjuntosEntity archivo = actividadArchivosAdjuntosRepository.findByActividadId(actividadComision.getActividadId());
 	    					if(archivo !=null)
 	    						actividadComisionDto.setArchivoAdjunto(archivo.getArchivoByArchivoId().getPath());
@@ -254,12 +278,30 @@ public class AulaService {
 		   			}
 		    	} 
 	    	}
+	    	
+	    	Collections.sort(resultado, new SortByDateActividad()); 
 	    	return resultado;	     	        
     	}catch(Exception ex) {
     		logger.error("Exception obtenerActividades: "+ex.getMessage());
     		return null;
     	}
      }
+    
+    /**
+     * Permite ordenar los eventos por su fecha de creacion.
+     */
+    static class SortByDateActividad implements Comparator<ActividadDto> {
+        @Override
+        public int compare(ActividadDto a, ActividadDto b) {
+           	if(b.getFechaApertura()!=null && a.getFechaApertura()!=null)
+         	      return b.getFechaApertura().compareTo(a.getFechaApertura());
+           	else if(b.getFechaApertura()==null)
+      			return -1;
+      		else
+      			return 1;
+           	
+        }
+    }
       
     /**
      * Servicio que devuelve todos los foros de un aula y de la comision en la que participa el usuario
@@ -285,7 +327,7 @@ public class AulaService {
 	   				List<ForoEntity> forosAula = foroRepository.ForosConCierrePosteriorA(idAula, fechaHoy);
 	   				//List<ForoEntity> forosAula = foroRepository.findByAulaId(idAula);	   				
 	   				for (ForoEntity foro: forosAula) {    	
-		    			ForoDto foroDto = AssemblerObjetos.ForoEntityToDto(foro,mensajeAdjuntoRepository);
+		    			ForoDto foroDto = AssemblerComunicacion.ForoEntityToDto(foro,mensajeAdjuntoRepository);
 		    			foroDto.setTipoEventoNivel("E");//evento de aula
 		    			foroDto.setIdAula(idAula);
 		    			resultado.add(foroDto);					
@@ -299,7 +341,7 @@ public class AulaService {
 		   				   	List<ForoEntity> forosAula = foroRepository.ForosConCierrePosteriorA(comision.getAulaByComisionId().getAulaId(), fechaHoy);
 		   				    //List<ForoEntity> forosAula = foroRepository.findByAulaId(comision.getAulaByComisionId().getAulaId());	   		
 					       	for (ForoEntity foro: forosAula) {    	
-					    		ForoDto foroDto = AssemblerObjetos.ForoEntityToDto(foro,mensajeAdjuntoRepository);
+					    		ForoDto foroDto = AssemblerComunicacion.ForoEntityToDto(foro,mensajeAdjuntoRepository);
 					    		foroDto.setTipoEventoNivel("EC");//evento de comision
 					    		foroDto.setIdAula(comision.getAulaByComisionId().getAulaId());
 								resultado.add(foroDto);					
@@ -307,12 +349,29 @@ public class AulaService {
 		    		}
 		    	}      
 	    	}
+	    	
+	    	Collections.sort(resultado, new SortByDateForo()); 
 	    	return resultado;	     	        
     	}catch(Exception ex) {
     		logger.error("Exception obtenerForos: "+ex.getMessage());
     		return null;
     	}
      }
+    
+    /**
+     * Permite ordenar los eventos por su fecha de creacion.
+     */
+    static class SortByDateForo implements Comparator<ForoDto> {
+        @Override
+        public int compare(ForoDto a, ForoDto b) {
+           	if(b.getFechaDesde()!=null && a.getFechaDesde()!=null)
+         	      return b.getFechaDesde().compareTo(a.getFechaDesde());
+           	else if(b.getFechaDesde()==null)
+      			return -1;
+      		else
+      			return 1;
+        }
+    }
     
     /**
      * Servicio que devuelve todos los materiales de un aula 
@@ -357,8 +416,7 @@ public class AulaService {
  	    }
  	   
  	    Iterator<CarpetaEntity> carpetas = carpeta.getCarpetasByCarpetaId().iterator(); 	   
- 	    while (carpetas.hasNext()) {
- 	    	
+ 	    while (carpetas.hasNext()) { 	    	
  	    	CarpetaEntity carpetaHija = (CarpetaEntity) carpetas.next();
  	    	carpetaDTO.getSubcarpetas().add(obtenerCarpetaDTO(carpetaHija));
  		}

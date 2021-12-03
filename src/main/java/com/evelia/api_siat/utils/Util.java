@@ -157,7 +157,7 @@ public class Util{
     return bos.toByteArray();
   }
   
-  static String convert(String in) {
+  public static String convert(String in) {
 	  return in.replace("&amp;","&")   
 	           .replace("&nbsp;"," ")   
 	           .replace("&lt;","<")   

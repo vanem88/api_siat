@@ -39,7 +39,7 @@ import com.evelia.api_siat.repositories.PermisoAccesoRepository;
 import com.evelia.api_siat.repositories.PublicacionRepository;
 import com.evelia.api_siat.repositories.TextoRepository;
 import com.evelia.api_siat.repositories.TipoUsuarioRepository;
-import com.evelia.api_siat.utils.AssemblerObjetos;
+import com.evelia.api_siat.utils.assembler.*;
 import com.evelia.api_siat.utils.Permisos;
 import com.evelia.api_siat.utils.constantes.RECURSOS;
 import com.evelia.api_siat.utils.constantes.TIPOS_CALIFICACION;
@@ -132,7 +132,7 @@ public class CalificacionService {
 		        		calificacionesEntity = notaRepository.CalificacionesAlumno(comision.getComisionId(), idPersona);
 		        	    //calificacionesEntity = notasRepository.CalificacionesAlumno(comision.getAulaId(), idPersona);			        		
 		    	        for (NotaEntity nota: calificacionesEntity) {  
-				        	CalificacionDto calificacionDto = AssemblerObjetos.NotaEntityToDto(nota);
+				        	CalificacionDto calificacionDto = AssemblerCalificacion.NotaEntityToDto(nota);
 				        	calificacionDto.setIdComision(comision.getComisionId());
 			    			resultado.add(calificacionDto);	    			
 				    	}    	        
@@ -192,11 +192,11 @@ public class CalificacionService {
 		    						if(examenFinalizado!=null) {
 		    							logger.info("examen finalizado ");
 		    							//Entregado sin o con calificacion
-		    							CalificacionDto calificacionDto = AssemblerObjetos.ExamenFinalizadoEntityToDto(examenFinalizado);
+		    							CalificacionDto calificacionDto = AssemblerCalificacion.ExamenFinalizadoEntityToDto(examenFinalizado);
 							        	calificacionDto.setIdComision(comision.getAulaId());
 							        	resultado.add(calificacionDto);	    							
 		    						}else {
-		    							CalificacionDto calificacionDto = AssemblerObjetos.ExamenEntityToDto(examen);
+		    							CalificacionDto calificacionDto = AssemblerCalificacion.ExamenEntityToDto(examen);
 							        	calificacionDto.setIdComision(comision.getAulaId());
 							        	calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.NO_ENTREGO);		    								
 		    							resultado.add(calificacionDto);

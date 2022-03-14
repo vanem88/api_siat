@@ -8,6 +8,7 @@ public class ForoDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	private long id;
 	private long idAula;
 	private String asunto;
 	private String nombreAutor;
@@ -20,6 +21,13 @@ public class ForoDto implements Serializable {
     
     private String tipoEventoNivel;
     
+    
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public String getAsunto() {
 		return asunto;
 	}

@@ -22,9 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
-
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin

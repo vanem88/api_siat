@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class NotaAprobarActividadNotasCualitativasEntityPK implements Serializable {
-    private long notaAprobarActividadId;
+   
+	private static final long serialVersionUID = 1L;
+	private long notaAprobarActividadId;
     private long valorCalificacionId;
 
     @Column(name = "NOTA_APROBAR_ACTIVIDAD_ID")

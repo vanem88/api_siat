@@ -1,8 +1,6 @@
 package com.evelia.api_siat.repositories;
 
 import com.evelia.api_siat.entity.ParticipanteComisionEntity;
-import com.evelia.api_siat.entity.ParticipanteEntity;
-
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

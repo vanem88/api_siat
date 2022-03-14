@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class PcompletarFraseBlancosEntityPK implements Serializable {
-    private long pcompletarFraseId;
+    
+	private static final long serialVersionUID = 1L;
+	private long pcompletarFraseId;
     private long fraseId;
 
     @Column(name = "PCOMPLETAR_FRASE_ID")

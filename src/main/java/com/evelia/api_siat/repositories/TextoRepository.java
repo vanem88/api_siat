@@ -19,7 +19,7 @@ public interface TextoRepository extends JpaRepository<TextoEntity, Long>{
 	
 	//Retorna todas las comunicaciones de un aula que no esten eliminadas. 
 	//Utilizado para obtener las noticias y los pizarrones.
-	@Query(value = "SELECT * FROM TEXTO t inner join PUBLICACION P WHERE (T.id = P.ids_Genera) AND T.comunicacion_Id = ?1 AND T.eliminado = ?2 AND (P.fecha_Apertura <= ?3 OR P.fecha_Apertura IS NULL) AND (P.fecha_Cierre >= ?3 OR P.fecha_Cierre IS NULL) ORDER BY P.fecha_Apertura DESC", nativeQuery = true)
+	@Query(value = "SELECT * FROM TEXTO T inner join PUBLICACION P WHERE (T.id = P.ids_Genera) AND T.comunicacion_Id = ?1 AND T.eliminado = ?2 AND (P.fecha_Apertura <= ?3 OR P.fecha_Apertura IS NULL) AND (P.fecha_Cierre >= ?3 OR P.fecha_Cierre IS NULL) ORDER BY P.fecha_Apertura DESC", nativeQuery = true)
 	List<TextoEntity> ComunicacionesDisponibles(Long idComunicacion,boolean eliminado,java.sql.Timestamp fechaHoy);
 	
 	//List<TextoEntity> findByComunicacionIdAndEliminadoOrderByFechaDesc(Long idComunicacion,boolean eliminado);
@@ -30,5 +30,12 @@ public interface TextoRepository extends JpaRepository<TextoEntity, Long>{
 	//Retorna todas las comunicaciones de un aula, que no esten eliminadas, segun el tipo de evento (Actividades, foros.)
 	//@Query("SELECT T FROM TextoEntity T WHERE T.comunicacionId = ?1 AND T.eliminado = ?2 AND T.tipoEvento= ?3 AND T.personaId = ?4 ORDER BY T.fechaEvento DESC")
 	//List<TextoEntity> ComunicacionIdAndEliminadoAndTipoEventoOrPersonaId(Long idCalendario, boolean eliminado,String tipoEvento,Long idPersona);
+	
+	//Retorna la comunicacion(Noticia, pizarron, etc) idTexto de un aula que no este eliminada y que se pueda visualizar segun las fechas de publicacion 
+	@Query(value = "SELECT * FROM TEXTO t inner join PUBLICACION p on t.PUBLICACION_ID = p.PUBLICACION_ID WHERE t.TEXTO_ID= ?1 AND t.ELIMINADO = ?2 AND (p.fecha_Apertura <= ?3 OR p.fecha_Apertura IS NULL) AND (p.fecha_Cierre >= ?3 OR p.fecha_Cierre IS NULL)", nativeQuery = true)
+	List<TextoEntity> textoSegunPublicacion(Long idTexto,boolean eliminado,java.sql.Timestamp fechaHoy);
+		
+	
+		
 			
 }

@@ -26,7 +26,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @Service
 public class EventoService {
     private final static Logger logger = LoggerFactory.getLogger(EventoService.class);

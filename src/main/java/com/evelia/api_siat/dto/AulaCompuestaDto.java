@@ -1,5 +1,6 @@
 package com.evelia.api_siat.dto;
 
+
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

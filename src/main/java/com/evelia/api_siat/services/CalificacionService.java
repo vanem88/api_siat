@@ -1,41 +1,24 @@
 package com.evelia.api_siat.services;
 
-import com.evelia.api_siat.dto.ActividadDto;
-import com.evelia.api_siat.dto.ArchivoDto;
-import com.evelia.api_siat.dto.AulaCompuestaDto;
 import com.evelia.api_siat.dto.CalificacionDto;
-import com.evelia.api_siat.dto.CarpetaDto;
-import com.evelia.api_siat.dto.ForoDto;
-import com.evelia.api_siat.dto.TextoDto;
-import com.evelia.api_siat.entity.ActividadArchivosAdjuntosEntity;
-import com.evelia.api_siat.entity.ActividadEntity;
-import com.evelia.api_siat.entity.ArchivoEntity;
-import com.evelia.api_siat.entity.AulaCompuestaEntity;
 import com.evelia.api_siat.entity.AulaEntity;
-import com.evelia.api_siat.entity.CarpetaEntity;
 import com.evelia.api_siat.entity.ComisionEntity;
-import com.evelia.api_siat.entity.EvaluacionEntity;
 import com.evelia.api_siat.entity.ExamenEntity;
 import com.evelia.api_siat.entity.ExamenFinalizadoEntity;
-import com.evelia.api_siat.entity.ForoEntity;
-import com.evelia.api_siat.entity.MaterialEntity;
 import com.evelia.api_siat.entity.NotaEntity;
 import com.evelia.api_siat.entity.ParticipanteEntity;
-import com.evelia.api_siat.entity.PermisoAccesoEntity;
-import com.evelia.api_siat.entity.TextoEntity;
 import com.evelia.api_siat.entity.TipoUsuarioEntity;
-import com.evelia.api_siat.repositories.ActividadArchivosAdjuntosRepository;
 import com.evelia.api_siat.repositories.ActividadRepository;
 import com.evelia.api_siat.repositories.AulaCompuestaRepository;
 import com.evelia.api_siat.repositories.AulaRepository;
+import com.evelia.api_siat.repositories.AutoExamenFinalizadoRepository;
+import com.evelia.api_siat.repositories.AutoExamenRepository;
 import com.evelia.api_siat.repositories.ComisionRepository;
 import com.evelia.api_siat.repositories.ExamenFinalizadoRepository;
 import com.evelia.api_siat.repositories.ExamenRepository;
 import com.evelia.api_siat.repositories.ForoRepository;
-import com.evelia.api_siat.repositories.MensajeAdjuntoRepository;
 import com.evelia.api_siat.repositories.NotaRepository;
 import com.evelia.api_siat.repositories.ParticipanteRepository;
-import com.evelia.api_siat.repositories.PermisoAccesoRepository;
 import com.evelia.api_siat.repositories.PublicacionRepository;
 import com.evelia.api_siat.repositories.TextoRepository;
 import com.evelia.api_siat.repositories.TipoUsuarioRepository;
@@ -46,13 +29,10 @@ import com.evelia.api_siat.utils.constantes.TIPOS_CALIFICACION;
 import com.evelia.api_siat.utils.constantes.TIPO_USUARIOS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,16 +78,15 @@ public class CalificacionService {
     ExamenRepository examenRepository;
     
     @Autowired
+    AutoExamenRepository autoExamenRepository;
+    
+    @Autowired
     ExamenFinalizadoRepository examenFinalizadoRepository;
     
+    @Autowired
+    AutoExamenFinalizadoRepository autoExamenFinalizadoRepository;
     
-    /**
-     * Servicio que devuelve todas las calificaciones de las actividades de un aula
-     * que haya entregado el usuario en caso de ser alumno o que haya generado en caso de ser un docente.
-     * @param Long idAula
-     * @param Long idUsuario
-     * @return Json List<Foro> 
-    */
+    
     public List<CalificacionDto> obtenerCalificaciones(Long idAula,Long idPersona){
     	logger.info("Servicio: /obtenerCalificaciones");	
     	
@@ -116,102 +95,162 @@ public class CalificacionService {
     	
     	try {
 	        List<ParticipanteEntity> participantes = participanteRepository.findByAulaIdAndPersonaId(idAula,idPersona); 
-	        if(participantes.size()>0) {
+	        if(participantes.size()>0) { // es participante del aula
    				ParticipanteEntity participante = participantes.get(0);
-   				ParticipanteEntity participanteAlumno = participanteRepository.findByAulaIdAndPersonaIdAndTipoUsuarioByTipoUsuarioIdNombre(idAula,idPersona,TIPO_USUARIOS.ALUMNO);
-   				   								
-	    		if(participanteAlumno != null) {//es un alumno
+   				List<ExamenEntity> examenesAula = examenRepository.findByEvaluacionByExamenIdAulaIdAndEvaluacionByExamenIdEliminadoAndEvaluacionByExamenIdPublicado(idAula,false,true);
+   				//List<AutoexamenEntity> autoExamenesAula = autoExamenRepository.findByEvaluacionByAutoexamenIdAulaIdAndEvaluacionByAutoexamenIdEliminadoAndEvaluacionByAutoexamenIdPublicado(idAula,false,true);
+    		  	   			
+   				if(participante.getTipoUsuarioByTipoUsuarioId().getNombre().compareTo(TIPO_USUARIOS.ALUMNO)==0) {
 	    			List<ComisionEntity> comisiones = comisionRepository.findDistinctByParticipanteComisionsByComisionIdParticipanteIdAndAulaByComisionIdAulaCompuestaId(participante.getParticipanteId(), idAula);
-	    			ComisionEntity comision = comisiones.get(0);
-    			   	//if (permisos.tienePermisoComision(participante,comision.getAulaId(),RECURSOS.ENVIAR_ACTIVIDADES_Y_VER_CALIFICACIONES))
-	    			if (permisos.tienePermisoComision(participante,comision.getComisionId(),RECURSOS.CALIFICACIONES_VISTA_ALUMNO)) {
-	    				//logger.info("CALIFICACIONES_VISTA_ALUMNO");
-	    				
-	    				//Actividades	    				
-	    				/////////////VER TIPO DE CALIFICACION INDIVIDUAL O GRUPAL
-		        		calificacionesEntity = notaRepository.CalificacionesAlumno(comision.getComisionId(), idPersona);
-		        	    //calificacionesEntity = notasRepository.CalificacionesAlumno(comision.getAulaId(), idPersona);			        		
-		    	        for (NotaEntity nota: calificacionesEntity) {  
-				        	CalificacionDto calificacionDto = AssemblerCalificacion.NotaEntityToDto(nota);
-				        	calificacionDto.setIdComision(comision.getComisionId());
-			    			resultado.add(calificacionDto);	    			
-				    	}    	        
+	    			Long idComision;
+	    			for (ComisionEntity comision: comisiones) {
+	    				idComision = comision.getComisionId();
+	    			   	//if (permisos.tienePermisoComision(participante,comision.getAulaId(),RECURSOS.ENVIAR_ACTIVIDADES_Y_VER_CALIFICACIONES))
+		    			//if (permisos.tienePermisoComision(participante,idComision,RECURSOS.CALIFICACIONES_VISTA_ALUMNO)) {
+		    				//////////////////////////////////////////////////////
+		    				//Actividades	///VER TIPO DE CALIFICACION INDIVIDUAL O GRUPAL
+		    				//////////////////////////////////////////////////////			        		
+		    				calificacionesEntity = notaRepository.CalificacionesAlumno(idComision, idPersona);
+		    			    for (NotaEntity nota: calificacionesEntity) {  
+					        	CalificacionDto calificacionDto = AssemblerCalificacion.NotaEntityToDto(nota);
+					        	calificacionDto.setIdComision(idComision);
+				    			resultado.add(calificacionDto);	    			
+					    	}
+			    	        
+		    				//////////////////////////////////////////////////////
+			    	        //Examenes
+		    				//////////////////////////////////////////////////////
+			        	    List<ExamenEntity> examenesComision = examenRepository.findByEvaluacionByExamenIdAulaIdAndEvaluacionByExamenIdEliminadoAndEvaluacionByExamenIdPublicado(idComision, false,true);
+			        	    List<ExamenEntity> examenes = Stream.concat(examenesAula.stream(), examenesComision.stream()).collect(Collectors.toList());
+		    				for (ExamenEntity examen: examenes) {	
+		    					ExamenFinalizadoEntity examenFinalizado =  examenFinalizadoRepository.findByEvaluacionFinalizadaConRespuestasByExamenFinalizadoIdEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasIdAlumnoIdAndEvaluacionFinalizadaConRespuestasByExamenFinalizadoIdEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasIdEvaluacionId(idPersona,examen.getExamenId());
+	    						if(examenFinalizado!=null) {
+	    							//Entregado sin o con calificacion
+	    							CalificacionDto calificacionDto = AssemblerCalificacion.ExamenFinalizadoEntityToDto(examenFinalizado);
+						        	if(calificacionDto!=null) {
+		    							calificacionDto.setIdComision(idComision);
+							        	resultado.add(calificacionDto);
+						        	}
+	    						}else {
+	    							CalificacionDto calificacionDto = AssemblerCalificacion.ExamenEntityToDto(examen);
+						        	calificacionDto.setIdComision(idComision);
+						        	calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.NO_ENTREGO);
+						        	calificacionDto.setAlumno(participante.getPersonaByPersonaId().getNombre()+" "+participante.getPersonaByPersonaId().getApellido());
+						        	calificacionDto.setPathFotoAlumno(participante.getPersonaByPersonaId().getPathFoto());
+	    							resultado.add(calificacionDto);
+	    						}				   						
+	    					}
+		    				
+		    				//////////////////////////////////////////////////////
+		    				//AutoExamenes
+		    				//////////////////////////////////////////////////////   
+		    				/*List<AutoexamenEntity> autoExamenesComision = autoExamenRepository.findByEvaluacionByAutoexamenIdAulaIdAndEvaluacionByAutoexamenIdEliminadoAndEvaluacionByAutoexamenIdPublicado(idComision, false,true);
+		    				List<AutoexamenEntity> autoExamenes = Stream.concat(autoExamenesAula.stream(), autoExamenesComision.stream()).collect(Collectors.toList());
+		    				for (AutoexamenEntity autoExamen: autoExamenes) {	
+	    						AutoexamenFinalizadoEntity autoExamenFinalizado =  autoExamenFinalizadoRepository.findByEvaluacionFinalizadaByAutoexamenFinalizadoIdPersonaByAlumnoIdAndEvaluacionFinalizadaByAutoexamenFinalizadoIdEvaluacionId(idPersona, autoExamen.getAutoexamenId());
+	    						if(autoExamenFinalizado!=null) {//Entregado sin o con calificacion
+	    							CalificacionDto calificacionDto = AssemblerCalificacion.AutoExamenFinalizadoEntityToDto(autoExamenFinalizado);
+	    							if(calificacionDto!=null) {
+		    							calificacionDto.setIdComision(idComision);
+							        	resultado.add(calificacionDto);
+	    							}
+	    						}else {
+	    							CalificacionDto calificacionDto = AssemblerCalificacion.AutoExamenEntityToDto(autoExamen);
+	    							if(calificacionDto!=null) {
+		    							calificacionDto.setIdComision(idComision);
+							        	calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.NO_ENTREGO);
+							        	calificacionDto.setAlumno(participante.getPersonaByPersonaId().getNombre()+" "+participante.getPersonaByPersonaId().getApellido());
+							        	calificacionDto.setPathFotoAlumno(participante.getPersonaByPersonaId().getPathFoto());
+		    							resultado.add(calificacionDto);
+	    							}
+	    						}				   						
+	    					}*/
+		    			//}//tiene permiso
 	    			}
-	   			 }else {
+	   			 }else { //No es alumno
 	    			TipoUsuarioEntity TipoUsuarioAlumno = this.tipoUsuarioRepository.findByNombre(TIPO_USUARIOS.ALUMNO);
 	    			List<AulaEntity> comisiones = aulaRepository.findDistinctByAulaCompuestaId(idAula);
-	    			  			
-	    			/*List<ExamenEntity> examenesAula = examenRepository.findByEvaluacionByExamenIdAulaId(idAula);
-	    			logger.info("examenesAula "+examenesAula.size());	
-	    			for (ExamenEntity examenAula: examenesAula) {	
-						logger.info("examenAula "+examenAula.getEvaluacionByExamenId().getNombre());	
-						//List<ExamenFinalizadoEntity> examenesFinalizado =  examenFinalizadoRepository.findByEvaluacionFinalizadaConRespuestasByExamenFinalizadoIdEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasIdAlumnoIdAndEvaluacionFinalizadaConRespuestasByExamenFinalizadoIdEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasIdEvaluacionId(idAula, alumno.getPersonaId());
-						List<ExamenFinalizadoEntity> examenesFinalizado =  examenFinalizadoRepository.findByEvaluacionFinalizadaConRespuestasByExamenFinalizadoIdEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasIdEvaluacionByEvaluacionIdAulaId(idAula);
-						logger.info("examenesFinalizado aula "+examenesFinalizado.size());	
-						if(examenesFinalizado!=null && examenesFinalizado.size()>0) {
-							List<ExamenFinalizadoEntity> examenesFinalizado2 =  examenFinalizadoRepository.recuperarEvaluacionesFinalizadasAlumnoActivo(alumno.getPersonaId(),examenAula.getExamenId());
-							
-							ExamenFinalizadoEntity examenFinalizado = examenesFinalizado.get(0);
-							logger.info("examenFinalizado "+examenFinalizado.getNotaFinal());
-							CalificacionDto calificacionDto = AssemblerObjetos.ExamenEntityToDto(examenFinalizado);
-				        	calificacionDto.setIdComision(idAula);
-				        	resultado.add(calificacionDto);	
-						}else {
-							
-						}
-							
-					}		*/	
-	    			
-	    			
-	   				for (AulaEntity comision: comisiones) {
-	   					logger.info("comision "+comision.getNombre()+" "+comision.getAulaId());	
-		    			if (permisos.tienePermisoComision(participante,comision.getAulaId(),RECURSOS.CALIFICACIONES_VISTA_TUTOR)) {
-		    				//logger.info("CALIFICACIONES_VISTA_TUTOR");
-			    			
+	    		  	Long idAlumno;
+	    		  	Long idComision;
+	    		  	for (AulaEntity comision: comisiones) {	    		  		
+	    		  		idComision = comision.getAulaId();
+	    		  		//if (permisos.tienePermisoComision(participante,idComision,RECURSOS.CALIFICACIONES_VISTA_TUTOR)) {	   						
 		    				List<ParticipanteEntity> alumnos = participanteRepository.recuperarParticipantesSegunTipoUsuarioEnComision(comision.getAulaId(), TipoUsuarioAlumno.getTipoUsuarioId());
+		    				List<ExamenEntity> examenesComision = examenRepository.findByEvaluacionByExamenIdAulaIdAndEvaluacionByExamenIdEliminadoAndEvaluacionByExamenIdPublicado(comision.getAulaId(), false,true);
+		    				List<ExamenEntity> examenes = Stream.concat(examenesAula.stream(), examenesComision.stream()).collect(Collectors.toList());
+		    				//List<AutoexamenEntity> autoExamenesComision = autoExamenRepository.findByEvaluacionByAutoexamenIdAulaIdAndEvaluacionByAutoexamenIdEliminadoAndEvaluacionByAutoexamenIdPublicado(idComision, false, false);
+		    				//List<AutoexamenEntity> autoExamenes = Stream.concat(autoExamenesAula.stream(), autoExamenesComision.stream()).collect(Collectors.toList());
 		    					    				
-		    				//Examenes
-		    				List<ExamenEntity> examenes = examenRepository.findByEvaluacionByExamenIdAulaIdAndEvaluacionByExamenIdEliminado(comision.getAulaId(), false);
-		    				logger.info("examenes "+examenes.size());	
-		    				
-		    				for (ParticipanteEntity alumno: alumnos) { 	
-		    					
+		    				for (ParticipanteEntity alumno: alumnos) { 		    					
+		    					//////////////////////////////////////////////////////
 		    					//Actividades
-			    				//List<ActividadEntity> actividades = actividadRepository.findDistinctByAulaId(comision.getAulaId());
-			    			/*	List<NotaEntity> notas = notaRepository.findDistinctByActividadByActividadIdAulaIdAndPersonaId(comision.getAulaId(),alumno.getPersonaId());
+		    					//////////////////////////////////////////////////////
+		    					//List<ActividadEntity> actividades = actividadRepository.findDistinctByAulaId(comision.getAulaId());
+		    					idAlumno = alumno.getPersonaId();		    					
+			    				List<NotaEntity> notas = notaRepository.findDistinctByActividadByActividadIdAulaIdAndPersonaId(idComision,idAlumno);
 				    			for (NotaEntity nota: notas) {
-				    				CalificacionDto calificacionDto = AssemblerObjetos.NotaEntityToDto(nota);
-						        	calificacionDto.setIdComision(comision.getAulaId());
+				    				CalificacionDto calificacionDto = AssemblerCalificacion.NotaEntityToDto(nota);
+						        	calificacionDto.setIdComision(idComision);
 					    			resultado.add(calificacionDto);		
-			    				}	*/    					
-		    					    					
+			    				}  				
+		    					  
+				    			//////////////////////////////////////////////////////
 		    					//Examenes
-		    					for (ExamenEntity examen: examenes) {	
-		    						logger.info("examenes "+examen.getEvaluacionByExamenId().getNombre());	
-		    						ExamenFinalizadoEntity examenFinalizado =  examenFinalizadoRepository.findByEvaluacionFinalizadaConRespuestasByExamenFinalizadoIdEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasIdAlumnoIdAndEvaluacionFinalizadaConRespuestasByExamenFinalizadoIdEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasIdEvaluacionId(alumno.getPersonaId(),examen.getExamenId());
+				    			//////////////////////////////////////////////////////	
+				    			for (ExamenEntity examen: examenes) {	
+		    						ExamenFinalizadoEntity examenFinalizado =  examenFinalizadoRepository.findByEvaluacionFinalizadaConRespuestasByExamenFinalizadoIdEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasIdAlumnoIdAndEvaluacionFinalizadaConRespuestasByExamenFinalizadoIdEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasIdEvaluacionId(idAlumno,examen.getExamenId());
 		    						if(examenFinalizado!=null) {
-		    							logger.info("examen finalizado ");
 		    							//Entregado sin o con calificacion
 		    							CalificacionDto calificacionDto = AssemblerCalificacion.ExamenFinalizadoEntityToDto(examenFinalizado);
-							        	calificacionDto.setIdComision(comision.getAulaId());
+							        	calificacionDto.setIdComision(idComision);
 							        	resultado.add(calificacionDto);	    							
 		    						}else {
 		    							CalificacionDto calificacionDto = AssemblerCalificacion.ExamenEntityToDto(examen);
-							        	calificacionDto.setIdComision(comision.getAulaId());
-							        	calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.NO_ENTREGO);		    								
-		    							resultado.add(calificacionDto);
+		    							if(calificacionDto!=null) {
+			    							calificacionDto.setIdComision(idComision);
+								        	calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.NO_ENTREGO);
+								        	calificacionDto.setAlumno(alumno.getPersonaByPersonaId().getNombre()+" "+alumno.getPersonaByPersonaId().getApellido());
+								        	calificacionDto.setPathFotoAlumno(alumno.getPersonaByPersonaId().getPathFoto());
+			    							resultado.add(calificacionDto);
+		    							}
 		    						}				   						
-		    					  } 
-		    				   }//for alumnos
-		    				}				
-		    			}//for comisiones
-	   				}//if tiene permiso
-	        }//if es participante      
+		    					} 
+		    					
+		    					//////////////////////////////////////////////////////
+								//AutoExamenes
+								////////////////////////////////////////////////////// 
+				    			/*for (AutoexamenEntity autoExamen: autoExamenes) {	
+		    						AutoexamenFinalizadoEntity autoExamenFinalizado =  autoExamenFinalizadoRepository.findByEvaluacionFinalizadaByAutoexamenFinalizadoIdPersonaByAlumnoIdAndEvaluacionFinalizadaByAutoexamenFinalizadoIdEvaluacionId(idAlumno, autoExamen.getAutoexamenId());
+		    						if(autoExamenFinalizado!=null) {
+		    							//Entregado sin o con calificacion
+		    							CalificacionDto calificacionDto = AssemblerCalificacion.AutoExamenFinalizadoEntityToDto(autoExamenFinalizado);
+		    							if(calificacionDto!=null) {
+			    							calificacionDto.setIdComision(idComision);
+								        	resultado.add(calificacionDto);
+		    							}
+		    						}else {
+		    							CalificacionDto calificacionDto = AssemblerCalificacion.AutoExamenEntityToDto(autoExamen);
+		    							if(calificacionDto!=null) {
+			    							calificacionDto.setIdComision(idComision);
+								        	calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.NO_ENTREGO);
+								        	calificacionDto.setAlumno(alumno.getPersonaByPersonaId().getNombre()+" "+alumno.getPersonaByPersonaId().getApellido());
+								        	calificacionDto.setPathFotoAlumno(alumno.getPersonaByPersonaId().getPathFoto());
+			    							resultado.add(calificacionDto);
+		    							}
+		    						}				   						
+		    					} */
+		    				}//for alumnos
+	   					//}//tiene permisos				
+	    		  	}//for comisiones    	
+	   			}
+	        }      
 	        return resultado;	     	        
     	}catch(Exception ex) {
     		logger.error("Exception obtenerCalificaciones: "+ex.getMessage());
     		return null;
     	}
      }
+    
+    
     
 }

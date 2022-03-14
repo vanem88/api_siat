@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class PopcionMultipleOpcionesEntityPK implements Serializable {
-    private long popcionMultipleId;
+   
+	private static final long serialVersionUID = 1L;
+	private long popcionMultipleId;
     private long fraseId;
 
     @Column(name = "POPCION_MULTIPLE_ID")

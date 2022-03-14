@@ -8,7 +8,8 @@ import javax.persistence.*;
 @Table(name = "PROGRAMA_ARCHIVOS", schema = "datosEveliaMinimo", catalog = "")
 public class ProgramaArchivosEntity implements Serializable {
     
-    private long programaId;
+   	private static final long serialVersionUID = 1L;
+	private long programaId;
     private long archivoId;
     private ProgramaEntity programaByProgramaId;
     private ArchivoEntity archivoByArchivoId;

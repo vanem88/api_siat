@@ -1,5 +1,6 @@
 package com.evelia.api_siat.dto;
 
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
@@ -9,8 +10,8 @@ public class CarpetaDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String nombre;
-    private Collection<ArchivoDto> archivos = new HashSet();
-    private Collection<CarpetaDto> subcarpetas = new HashSet();
+    private Collection<ArchivoDto> archivos = new HashSet<ArchivoDto>();
+    private Collection<CarpetaDto> subcarpetas = new HashSet<CarpetaDto>();
     
 	public String getNombre() {
 		return nombre;

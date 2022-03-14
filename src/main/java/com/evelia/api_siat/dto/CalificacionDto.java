@@ -1,5 +1,6 @@
 package com.evelia.api_siat.dto;
 
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -9,17 +10,17 @@ public class CalificacionDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long idComision;
-	private String titulo;//Actividad, examen, autoexamen, cuestionario
+	private String titulo  = "";//Actividad, examen, autoexamen, cuestionario
 	private Timestamp fechaApertura;
 	private Timestamp fechaCierre;
-	private String autorCalificacion;
-	private String pathFotoAutorCalificacion;
-	private String personaRealizoEntrega;
-	private String pathFotoPersonaRealizoEntrega;
+	private String autorCalificacion = "";
+	private String pathFotoAutorCalificacion = "";
+	private String alumno  = "";
+	private String pathFotoAlumno  = "";
 	
-	private String estadoCalificacion;
-	private String calificacion;
-	private String devolucioncalificacion;
+	private String estadoCalificacion  = "";
+	private String calificacion  = "";
+	private String devolucioncalificacion  = "";
 	private Timestamp fechaEntrega;
 	
 	public Long getIdComision() {
@@ -52,11 +53,12 @@ public class CalificacionDto implements Serializable {
 	public void setAutorCalificacion(String autorCalificacion) {
 		this.autorCalificacion = autorCalificacion;
 	}
-	public String getPersonaRealizoEntrega() {
-		return personaRealizoEntrega;
+	
+	public String getAlumno() {
+		return alumno;
 	}
-	public void setPersonaRealizoEntrega(String personaRealizoEntrega) {
-		this.personaRealizoEntrega = personaRealizoEntrega;
+	public void setAlumno(String alumno) {
+		this.alumno = alumno;
 	}
 	public String getEstadoCalificacion() {
 		return estadoCalificacion;
@@ -88,12 +90,14 @@ public class CalificacionDto implements Serializable {
 	public void setPathFotoAutorCalificacion(String pathFotoAutorCalificacion) {
 		this.pathFotoAutorCalificacion = pathFotoAutorCalificacion;
 	}
-	public String getPathFotoPersonaRealizoEntrega() {
-		return pathFotoPersonaRealizoEntrega;
+	public String getPathFotoAlumno() {
+		return pathFotoAlumno;
 	}
-	public void setPathFotoPersonaRealizoEntrega(String pathFotoPersonaRealizoEntrega) {
-		this.pathFotoPersonaRealizoEntrega = pathFotoPersonaRealizoEntrega;
+	public void setPathFotoAlumno(String pathFotoAlumno) {
+		this.pathFotoAlumno = pathFotoAlumno;
 	}
+	
+	
 	
 	
 	

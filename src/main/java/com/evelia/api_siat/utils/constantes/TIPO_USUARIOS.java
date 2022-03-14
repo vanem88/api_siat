@@ -40,7 +40,7 @@ public class TIPO_USUARIOS {
   public static String PARTICIPANTE = "Participante";
   public static String USUARIO_PUBLICO = "Usuario Publico";
   
-  public static Vector LISTA_DE_ROLES_DEL_AULA_ACTUAL = null; /*de tipo: TIPO_USUARIO*/
+  public static Vector<?> LISTA_DE_ROLES_DEL_AULA_ACTUAL = null; /*de tipo: TIPO_USUARIO*/
         
   public static String [] LISTA_DE_ROLES = {
 	    LIDER,

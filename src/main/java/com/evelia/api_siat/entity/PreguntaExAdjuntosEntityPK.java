@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class PreguntaExAdjuntosEntityPK implements Serializable {
-    private long preguntaExId;
+    
+	private static final long serialVersionUID = 1L;
+	private long preguntaExId;
     private long archivoId;
 
     @Column(name = "PREGUNTA_EX_ID")

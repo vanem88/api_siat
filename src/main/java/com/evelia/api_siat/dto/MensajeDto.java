@@ -1,5 +1,6 @@
 package com.evelia.api_siat.dto;
 
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -9,14 +10,29 @@ public class MensajeDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private Long id;
 	private Timestamp fecha;
    // private String titulo;
     private String contenido;
     private String persona;
     private String pathFotoPerfil;
-    private Collection<MensajeDto> mensajes = new HashSet();
+    private Collection<MensajeDto> mensajes = new HashSet<MensajeDto>();
     private String pathArchivo;
+    private Long msjPadreId;
     
+    
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Long getMsjPadreId() {
+		return msjPadreId;
+	}
+	public void setMsjPadreId(Long msjPadreId) {
+		this.msjPadreId = msjPadreId;
+	}
 	public Timestamp getFecha() {
 		return fecha;
 	}

@@ -7,7 +7,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "AGENDA", schema = "datosEveliaMinimo", catalog = "")
 public class AgendaEntity implements Serializable{
-    private long agendaId;
+    
+	private static final long serialVersionUID = 1L;
+	private long agendaId;
     private Long id;
     private long personaId;
     private long contactoId;

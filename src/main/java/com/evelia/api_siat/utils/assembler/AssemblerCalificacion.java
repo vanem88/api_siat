@@ -6,8 +6,11 @@ import org.slf4j.LoggerFactory;
 import com.evelia.api_siat.dto.ActividadDto;
 import com.evelia.api_siat.dto.CalificacionDto;
 import com.evelia.api_siat.entity.ActividadEntity;
+import com.evelia.api_siat.entity.AutoexamenEntity;
+import com.evelia.api_siat.entity.AutoexamenFinalizadoEntity;
 import com.evelia.api_siat.entity.CalificacionActividadEntity;
 import com.evelia.api_siat.entity.EvaluacionEntity;
+import com.evelia.api_siat.entity.EvaluacionFinalizadaConRespuestasEntity;
 import com.evelia.api_siat.entity.EvaluacionFinalizadaEntity;
 import com.evelia.api_siat.entity.ExamenEntity;
 import com.evelia.api_siat.entity.ExamenFinalizadoEntity;
@@ -19,10 +22,7 @@ import com.evelia.api_siat.utils.constantes.TIPOS_CALIFICACION;
 
 public class AssemblerCalificacion {
 	
-	static Util util = new Util();
-	
-	
-    private final static Logger logger = LoggerFactory.getLogger(AssemblerCalificacion.class);
+	private final static Logger logger = LoggerFactory.getLogger(AssemblerCalificacion.class);
 	 	      
     /**
      * Convierte un actividad Entity en su respectivo DTO
@@ -38,7 +38,7 @@ public class AssemblerCalificacion {
     		actividadDto.setBorrador(actividad.isBorrador());
     		actividadDto.setDescripcion(actividad.getDescripcion());
     		String str1 = new String(actividad.getDetalles());
-    		actividadDto.setDetalles(util.convert(str1));
+    		actividadDto.setDetalles(Util.convert(str1));
     		actividadDto.setFechaApertura(publicacion.getFechaApertura());
     		actividadDto.setFechaCierre(publicacion.getFechaCierre());
     		if(actividad.getPersonaByPersonaId()!=null) {
@@ -59,11 +59,10 @@ public class AssemblerCalificacion {
      * @return CalificacionDto 
     */
     public static CalificacionDto NotaEntityToDto(NotaEntity nota) {
-    	try {
-    		
+    	try {    		
     	  	CalificacionDto calificacionDto = new CalificacionDto();
     	  	ActividadEntity actividad = nota.getActividadByActividadId();
-    	  	calificacionDto.setTitulo(util.convert(actividad.getDescripcion()));
+    	  	calificacionDto.setTitulo(Util.convert(actividad.getDescripcion()));
     	  	
     	  	Timestamp fechaEntrega = nota.getFecha();
     	  	calificacionDto.setFechaEntrega(fechaEntrega);
@@ -81,18 +80,19 @@ public class AssemblerCalificacion {
 	    	if(cai!=null) { 
 	    		//Docente que califico la actividad
 	    		PersonaEntity docente = (PersonaEntity)cai.getPersonaByAutorCalificacionId();
-	    		//if(docente!=null)
-    		    calificacionDto.setAutorCalificacion(docente.getNombre()+" "+docente.getApellido());	
-    		    calificacionDto.setPathFotoAutorCalificacion(docente.getPathFoto());
-	    		
-    			if(cai.getDevolucionTexto()!=null) {
-		    		String str = new String(cai.getDevolucionTexto());
-		    		calificacionDto.setDevolucioncalificacion(util.convert(str));		    			
-    			}
-    			if(cai.getEstadoCalificacionByEstadoCalificacionId()!=null) 
-    				calificacionDto.setEstadoCalificacion(cai.getEstadoCalificacionByEstadoCalificacionId().getNombre());
-    			if(cai.getValorCalificacionByValorCalificacionId()!=null)
-    				calificacionDto.setCalificacion(cai.getValorCalificacionByValorCalificacionId().getNombre());	    		
+	    		if(docente!=null) {
+	    		    calificacionDto.setAutorCalificacion(docente.getNombre()+" "+docente.getApellido());	
+	    		    calificacionDto.setPathFotoAutorCalificacion(docente.getPathFoto());
+		    		
+	    			if(cai.getDevolucionTexto()!=null) {
+			    		String str = new String(cai.getDevolucionTexto());
+			    		calificacionDto.setDevolucioncalificacion(Util.convert(str));		    			
+	    			}
+	    			if(cai.getEstadoCalificacionByEstadoCalificacionId()!=null) 
+	    				calificacionDto.setEstadoCalificacion(cai.getEstadoCalificacionByEstadoCalificacionId().getNombre());
+	    			if(cai.getValorCalificacionByValorCalificacionId()!=null)
+	    				calificacionDto.setCalificacion(cai.getValorCalificacionByValorCalificacionId().getNombre());	 
+	    		}
     		}else{
     			if(fechaEntrega!=null)
     				calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.SIN_CALIFICAR);
@@ -100,13 +100,11 @@ public class AssemblerCalificacion {
     			    calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.NO_ENTREGO);    				
     		}
 	  	    	
-	    	//PersonaEntity personaRealizoEntrega = nota.getPersonaRealizoEntregaByPersonaRealizoEntregaId();	    
 	    	PersonaEntity personaRealizoEntrega = nota.getPersonaByPersonaId();
 	    	if(personaRealizoEntrega!=null) {	
-		    	calificacionDto.setPersonaRealizoEntrega(personaRealizoEntrega.getNombre()+" "+personaRealizoEntrega.getApellido());
-		    	calificacionDto.setPathFotoPersonaRealizoEntrega(personaRealizoEntrega.getPathFoto());
-	    	}else System.out.println("personaRealizoEntrega null ");
-		    			     	
+		    	calificacionDto.setAlumno(personaRealizoEntrega.getNombre()+" "+personaRealizoEntrega.getApellido());
+		    	calificacionDto.setPathFotoAlumno(personaRealizoEntrega.getPathFoto());
+	    	}		    			     	
 	    	
 	    	return calificacionDto;
     	}catch(Exception ex) {
@@ -117,47 +115,104 @@ public class AssemblerCalificacion {
         
     /**
      * Convierte una ExamenFinalizado Entity en su respectivo DTO
-     * @param NotaEntity nota
+     * @param ExamenFinalizadoEntity examenFinalizado
      * @return CalificacionDto 
     */
     public static CalificacionDto ExamenFinalizadoEntityToDto(ExamenFinalizadoEntity examenFinalizado) {
-    	CalificacionDto calificacionDto = new CalificacionDto();
     	try {    		
 		  	EvaluacionFinalizadaEntity evaluacionFinalizada = examenFinalizado.getEvaluacionFinalizadaConRespuestasByExamenFinalizadoId().getEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasId();
-    	  	EvaluacionEntity evaluacion = examenFinalizado.getEvaluacionFinalizadaConRespuestasByExamenFinalizadoId().getEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasId().getEvaluacionByEvaluacionId();
-    	  	String nombreEvaluacion = evaluacion.getNombre();
-    	  	calificacionDto.setTitulo(util.convert(nombreEvaluacion));    	  	
-    	  	calificacionDto.setFechaEntrega(evaluacionFinalizada.getFechaRealizacion());
-    		calificacionDto.setFechaApertura(evaluacion.getFechaHoraInicio());
-		    calificacionDto.setFechaCierre(evaluacion.getFechaHoraFin());			    	
-		    calificacionDto.setPersonaRealizoEntrega(evaluacionFinalizada.getPersonaByAlumnoId().getNombre()+" "+evaluacionFinalizada.getPersonaByAlumnoId().getApellido());		
-		    calificacionDto.setPathFotoPersonaRealizoEntrega(evaluacionFinalizada.getPersonaByAlumnoId().getPathFoto());	
-		    
-		    logger.info("nota"+examenFinalizado.getNotaFinal());
-	    	if(examenFinalizado.getNotaFinal()<=0) {
-	    		logger.info("sin nota ");
-	    		calificacionDto.setAutorCalificacion("");
-	    		calificacionDto.setCalificacion("");
-	    		calificacionDto.setDevolucioncalificacion("");
-	    		calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.SIN_CALIFICAR);
-	    	}else {
-	    		calificacionDto.setAutorCalificacion(examenFinalizado.getPersonaByPersonaId().getNombre()+" "+examenFinalizado.getPersonaByPersonaId().getApellido());
-	    		calificacionDto.setPathFotoAutorCalificacion(examenFinalizado.getPersonaByPersonaId().getPathFoto());
-	    		calificacionDto.setCalificacion(String.valueOf(examenFinalizado.getNotaFinal()));
-	    		calificacionDto.setEstadoCalificacion(examenFinalizado.getEvaluacionFinalizadaConRespuestasByExamenFinalizadoId().getEstadoEx());
-	    		//calificacionDto.setDevolucioncalificacion("");
-	    	}
-	    		
-	    		
-	    	
-	    			    	
-    				    			
-    		
-	   	
-	    	return calificacionDto;
+		  	PersonaEntity alumno = evaluacionFinalizada.getPersonaByAlumnoId();
+		  	if(alumno!=null) {
+			  	EvaluacionEntity evaluacion = examenFinalizado.getEvaluacionFinalizadaConRespuestasByExamenFinalizadoId().getEvaluacionFinalizadaByEvaluacionFinalizadaConRespuestasId().getEvaluacionByEvaluacionId();
+	    	  	String nombreEvaluacion = evaluacion.getNombre();
+	    	  	CalificacionDto calificacionDto = new CalificacionDto();
+	    	  	calificacionDto.setTitulo(Util.convert(nombreEvaluacion));    	  	
+	    	  	calificacionDto.setFechaEntrega(evaluacionFinalizada.getFechaRealizacion());
+	    		calificacionDto.setFechaApertura(evaluacion.getFechaHoraInicio());
+			    calificacionDto.setFechaCierre(evaluacion.getFechaHoraFin());			    	
+			    calificacionDto.setAlumno(alumno.getNombre()+" "+alumno.getApellido());		
+			    calificacionDto.setPathFotoAlumno(alumno.getPathFoto());	
+			    
+			   	if(examenFinalizado.getNotaFinal()<=0) {
+		    		calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.SIN_CALIFICAR);
+		    	}else {
+		    		PersonaEntity autorCalificacion = examenFinalizado.getPersonaByPersonaId();
+		    		if(autorCalificacion!=null) {
+			    		calificacionDto.setAutorCalificacion(autorCalificacion.getNombre()+" "+autorCalificacion.getApellido());
+			    		calificacionDto.setPathFotoAutorCalificacion(autorCalificacion.getPathFoto());
+		    		}
+		    		calificacionDto.setCalificacion(String.valueOf(examenFinalizado.getNotaFinal()));
+		    		calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.CALIFICADO);	    		
+		    	} 			
+		    	return calificacionDto;
+		  	}else
+		  		return null;
     	}catch(Exception ex) {
     		System.out.println("Exception NotaEntityToDto");
-    		return calificacionDto;
+    		return null;
+		}	
+    }
+    
+    /**
+     * Convierte una Nota Entity en su respectivo DTO
+     * @param ExamenEntity examen
+     * @return CalificacionDto 
+    */
+    public static CalificacionDto ExamenEntityToDto(ExamenEntity examen) {
+    	try {   		
+    		//El examen esta "no entregado"
+    	  	EvaluacionEntity evaluacion = examen.getEvaluacionByExamenId();
+    	  	if(evaluacion !=null) {
+    	  		CalificacionDto calificacionDto = new CalificacionDto();
+	    	  	String nombreEvaluacion = evaluacion.getNombre();
+	    	  	calificacionDto.setTitulo(Util.convert(nombreEvaluacion));    	  	
+	    	  	calificacionDto.setFechaApertura(evaluacion.getFechaHoraInicio());
+			    calificacionDto.setFechaCierre(evaluacion.getFechaHoraFin());			    	
+		    	return calificacionDto;
+    	  	}else
+    	  		return null;
+    	}catch(Exception ex) {
+    		System.out.println("Exception NotaEntityToDto");
+    		return null;
+		}	
+    }
+    
+    
+    /**
+     * Convierte un AutoExamenFinalizado Entity en su respectivo DTO
+     * @param NotaEntity nota
+     * @return CalificacionDto 
+    */
+    public static CalificacionDto AutoExamenFinalizadoEntityToDto(AutoexamenFinalizadoEntity examenFinalizado) {
+    	try {    		
+		  	EvaluacionFinalizadaEntity evaluacionFinalizada = examenFinalizado.getEvaluacionFinalizadaByAutoexamenFinalizadoId();
+		   	EvaluacionEntity evaluacion = examenFinalizado.getEvaluacionFinalizadaByAutoexamenFinalizadoId().getEvaluacionByEvaluacionId();
+		   	
+		   	PersonaEntity alumno = evaluacionFinalizada.getPersonaByAlumnoId();
+		   	if(alumno!=null) {
+			   	String nombreEvaluacion = evaluacion.getNombre();
+			   	CalificacionDto calificacionDto = new CalificacionDto();
+	    	  	calificacionDto.setTitulo(Util.convert(nombreEvaluacion));    	  	
+	    	  	calificacionDto.setFechaEntrega(evaluacionFinalizada.getFechaRealizacion());
+	    		calificacionDto.setFechaApertura(evaluacion.getFechaHoraInicio());
+			    calificacionDto.setFechaCierre(evaluacion.getFechaHoraFin());			    	
+			    calificacionDto.setAlumno(alumno.getNombre()+" "+alumno.getApellido());		
+			    calificacionDto.setPathFotoAlumno(alumno.getPathFoto());	
+			    
+			   	if(examenFinalizado.getNotaFinal()<=0) {
+		    		calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.SIN_CALIFICAR);
+		    	}else {
+		    		calificacionDto.setAutorCalificacion(alumno.getNombre()+" "+alumno.getApellido());
+			    	calificacionDto.setPathFotoAutorCalificacion(alumno.getPathFoto());
+		    		calificacionDto.setCalificacion(String.valueOf(examenFinalizado.getNotaFinal()));
+		    		calificacionDto.setEstadoCalificacion(TIPOS_CALIFICACION.CALIFICADO);	    		
+		    	} 
+			   	return calificacionDto;
+		   	}else
+		   		return null;	    	
+    	}catch(Exception ex) {
+    		System.out.println("Exception NotaEntityToDto");
+    		return null;
 		}	
     }
     
@@ -166,32 +221,24 @@ public class AssemblerCalificacion {
      * @param NotaEntity nota
      * @return CalificacionDto 
     */
-    public static CalificacionDto ExamenEntityToDto(ExamenEntity examen) {
-    	CalificacionDto calificacionDto = new CalificacionDto();
-    	try {   		
-    		  	  	
-    	  	EvaluacionEntity evaluacion = examen.getEvaluacionByExamenId();
-    	  	String nombreEvaluacion = evaluacion.getNombre();
-    	  	calificacionDto.setTitulo(util.convert(nombreEvaluacion));
-    	  	
-    	  	calificacionDto.setFechaApertura(evaluacion.getFechaHoraInicio());
-		    calificacionDto.setFechaCierre(evaluacion.getFechaHoraFin());			    	
-	    	calificacionDto.setAutorCalificacion("");
-	    	calificacionDto.setPathFotoAutorCalificacion("");
-	    	calificacionDto.setCalificacion("");	    	
-	    	calificacionDto.setPersonaRealizoEntrega("");	
-	    	calificacionDto.setPathFotoPersonaRealizoEntrega("");
-	  	    calificacionDto.setDevolucioncalificacion("");		    			
-    		    	    			     	
-	    	
-	    	return calificacionDto;
+    public static CalificacionDto AutoExamenEntityToDto(AutoexamenEntity examen) {
+    	try {   		    		  	  	
+    		//El autoexamen esta "no entregado"
+    	  	EvaluacionEntity evaluacion = examen.getEvaluacionByAutoexamenId();
+    	  	if(evaluacion!=null) {
+    	  		CalificacionDto calificacionDto = new CalificacionDto();
+	    	  	String nombreEvaluacion = evaluacion.getNombre();
+	    	  	calificacionDto.setTitulo(Util.convert(nombreEvaluacion));    	  	
+	    	  	calificacionDto.setFechaApertura(evaluacion.getFechaHoraInicio());
+			    calificacionDto.setFechaCierre(evaluacion.getFechaHoraFin());
+			    return calificacionDto;
+    	  	}else
+    	  		return null;
     	}catch(Exception ex) {
     		System.out.println("Exception NotaEntityToDto");
-    		return calificacionDto;
+    		return null;
 		}	
     }
-    
-    
 
 
 }

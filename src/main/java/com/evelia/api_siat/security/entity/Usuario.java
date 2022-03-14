@@ -7,7 +7,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "PERSONA")
 public class Usuario implements Serializable {
-    @Id
+    
+	private static final long serialVersionUID = 1L;
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PERSONA_ID")
     //@Column(name = "ID")

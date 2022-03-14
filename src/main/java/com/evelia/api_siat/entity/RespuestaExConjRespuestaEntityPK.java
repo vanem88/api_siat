@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class RespuestaExConjRespuestaEntityPK implements Serializable {
-    private long respuestaExId;
+ 
+	private static final long serialVersionUID = 1L;
+	private long respuestaExId;
     private long fraseId;
 
     @Column(name = "RESPUESTA_EX_ID")

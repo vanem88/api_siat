@@ -6,7 +6,9 @@ import java.io.Serializable;
 @Entity
 @Table(name = "VIDEOCONFERENCIA_MODERADORES", schema = "datosEveliaMinimo", catalog = "")
 public class VideoconferenciaModeradoresEntity implements Serializable {
-    @Id
+    
+	private static final long serialVersionUID = 1L;
+	@Id
     private long videoconferenciaId;
     @Id
     private long personaId;

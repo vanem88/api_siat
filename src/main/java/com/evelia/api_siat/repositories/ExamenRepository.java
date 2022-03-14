@@ -6,11 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ExamenRepository extends JpaRepository<ExamenEntity, Long>{
 	
-	//Retorna todas los examenes de un aula
-	//List<ExamenEntity> findByEvaluacionByExamenIdAulaIdAndEvaluacionByExamenIdEliminadoAndOrderByEvaluacionByExamenIdNombreAsc(Long idAula,boolean eliminado);
-	
-	List<ExamenEntity> findByEvaluacionByExamenIdAulaIdAndEvaluacionByExamenIdEliminado(Long idAula,boolean eliminado);
-	
-	List<ExamenEntity> findByEvaluacionByExamenIdAulaId(Long idAula);
+	// Retorna todos los Autoexamenes del aula segun los campos "eliminado" y "publicado"
+	List<ExamenEntity> findByEvaluacionByExamenIdAulaIdAndEvaluacionByExamenIdEliminadoAndEvaluacionByExamenIdPublicado(Long idAula,boolean eliminado,boolean publicado);
 	
 }

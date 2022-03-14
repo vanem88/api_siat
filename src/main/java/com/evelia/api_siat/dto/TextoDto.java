@@ -1,31 +1,38 @@
 package com.evelia.api_siat.dto;
 
-import java.io.Serializable;
-import java.util.Collection;
 
+import java.io.Serializable;
+import java.util.List;
+
+//@JsonInclude(JsonInclude.Include.NON_NULL) 
 public class TextoDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long aulaId;
-	private Long id;
+	private long id;
+	
 	private String titulo;
 	private String contenido;
-	private Long idPersona;
+	
 	private String nombreApellidoPersona;
 	private String pathFoto;
 	private java.sql.Timestamp fechaCreacion;
-	private java.sql.Timestamp fechaUltimaModificacion;	
+	private java.sql.Timestamp fechaUltimaModificacion;
+	private String tipoPublicacion;
 	private java.sql.Timestamp disponibleDesde;
 	private java.sql.Timestamp disponibleHasta;	
-	//Comentarios tiene el pizarron
-	private Collection<ComentarioDto> comentarios;
+    private List<ComentarioDto> comentarios;
 	private String pathArchivo;
 	
-	public Long getId() {
+	//private String tipoEvento; //siempre null
+	private String tipoEventoNivel;
+	private boolean eliminado;
+	private boolean generarAlerta;
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getTitulo() {
@@ -39,12 +46,6 @@ public class TextoDto implements Serializable {
 	}
 	public void setContenido(String contenido) {
 		this.contenido = contenido;
-	}
-	public Long getIdPersona() {
-		return idPersona;
-	}
-	public void setIdPersona(Long idPersona) {
-		this.idPersona = idPersona;
 	}
 	public String getNombreApellidoPersona() {
 		return nombreApellidoPersona;
@@ -64,12 +65,10 @@ public class TextoDto implements Serializable {
 	public void setFechaUltimaModificacion(java.sql.Timestamp fechaUltimaModificacion) {
 		this.fechaUltimaModificacion = fechaUltimaModificacion;
 	}
-
-
-	public Collection<ComentarioDto> getComentarios() {
+	public List<ComentarioDto> getComentarios() {
 		return comentarios;
 	}
-	public void setComentarios(Collection<ComentarioDto> comentarios) {
+	public void setComentarios(List<ComentarioDto> comentarios) {
 		this.comentarios = comentarios;
 	}
 	public String getPathArchivo() {
@@ -78,12 +77,7 @@ public class TextoDto implements Serializable {
 	public void setPathArchivo(String pathArchivo) {
 		this.pathArchivo = pathArchivo;
 	}
-	public Long getAulaId() {
-		return aulaId;
-	}
-	public void setAulaId(Long aulaId) {
-		this.aulaId = aulaId;
-	}
+
 	public String getPathFoto() {
 		return pathFoto;
 	}
@@ -102,6 +96,55 @@ public class TextoDto implements Serializable {
 	public void setDisponibleHasta(java.sql.Timestamp disponibleHasta) {
 		this.disponibleHasta = disponibleHasta;
 	}
+	public String getTipoPublicacion() {
+		return tipoPublicacion;
+	}
+	public void setTipoPublicacion(String tipoPublicacion) {
+		this.tipoPublicacion = tipoPublicacion;
+	}
+	/*public Timestamp getFecha() {
+		return fecha;
+	}
+	public void setFecha(Timestamp fecha) {
+		this.fecha = fecha;
+	}
+	public Timestamp getFechaEvento() {
+		return fechaEvento;
+	}
+	public void setFechaEvento(Timestamp fechaEvento) {
+		this.fechaEvento = fechaEvento;
+	}
+	public Timestamp getFechaFinEvento() {
+		return fechaFinEvento;
+	}
+	public void setFechaFinEvento(Timestamp fechaFinEvento) {
+		this.fechaFinEvento = fechaFinEvento;
+	}*/
+	/*public String getTipoEvento() {
+		return tipoEvento;
+	}
+	public void setTipoEvento(String tipoEvento) {
+		this.tipoEvento = tipoEvento;
+	}*/
+	public boolean isEliminado() {
+		return eliminado;
+	}
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
+	}
+	public boolean isGenerarAlerta() {
+		return generarAlerta;
+	}
+	public void setGenerarAlerta(boolean generarAlerta) {
+		this.generarAlerta = generarAlerta;
+	}
+	public String getTipoEventoNivel() {
+		return tipoEventoNivel;
+	}
+	public void setTipoEventoNivel(String tipoEventoNivel) {
+		this.tipoEventoNivel = tipoEventoNivel;
+	}
+	
 	
 	
 

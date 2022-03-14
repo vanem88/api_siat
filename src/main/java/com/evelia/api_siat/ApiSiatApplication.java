@@ -8,7 +8,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 //public class ApiSiatApplication {
 public class ApiSiatApplication extends SpringBootServletInitializer  {
-
+	
 	//Para generar el war
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {

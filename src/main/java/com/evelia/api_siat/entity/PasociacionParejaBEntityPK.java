@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class PasociacionParejaBEntityPK implements Serializable {
-    private long pasociacionId;
+    
+	private static final long serialVersionUID = 1L;
+	private long pasociacionId;
     private long fraseId;
 
     @Column(name = "PASOCIACION_ID")

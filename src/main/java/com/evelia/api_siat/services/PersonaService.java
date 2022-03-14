@@ -18,7 +18,7 @@ public class PersonaService {
     PersonaRepository personaRepository;
  
     public PersonaDto obtenerPorId(Long id){
-       logger.info(personaRepository.findById(id).get().getEmail());
+       logger.info("Servicio: /obtenerUsuarioPorId");
        return MHelper.modelMapper().map(personaRepository.findById(id).get(),PersonaDto.class);
     }
     

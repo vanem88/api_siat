@@ -3,7 +3,6 @@ package com.evelia.api_siat.dto;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-
 public class ActividadDto implements Serializable {
 	
   	private static final long serialVersionUID = 1L;

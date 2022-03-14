@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class EvaluacionCategoriasEvalEntityPK implements Serializable {
-    private long evaluacionId;
+   
+	private static final long serialVersionUID = 1L;
+	private long evaluacionId;
     private long categoriaPreguntaId;
 
     @Column(name = "EVALUACION_ID")

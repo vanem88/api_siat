@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class ActividadArchivosAdjuntosEntityPK implements Serializable {
-    private long actividadId;
+   
+	private static final long serialVersionUID = 1L;
+	private long actividadId;
     private long archivoId;
 
     @Column(name = "ACTIVIDAD_ID")

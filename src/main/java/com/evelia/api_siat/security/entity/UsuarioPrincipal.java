@@ -9,10 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
-//import java.util.stream.Collectors;
 
 public class UsuarioPrincipal implements UserDetails {
-    private Long id;
+   
+	private static final long serialVersionUID = 1L;
+	private Long id;
     private String usuario;
     private String numeroDoc;
     private String email;

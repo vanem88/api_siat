@@ -4,7 +4,6 @@ import com.evelia.api_siat.dto.ActividadDto;
 import com.evelia.api_siat.dto.ArchivoDto;
 import com.evelia.api_siat.dto.AulaCompuestaDto;
 import com.evelia.api_siat.dto.CarpetaDto;
-import com.evelia.api_siat.dto.EventoDto;
 import com.evelia.api_siat.dto.ForoDto;
 import com.evelia.api_siat.dto.TextoDto;
 import com.evelia.api_siat.entity.ActividadArchivosAdjuntosEntity;
@@ -39,7 +38,6 @@ import com.evelia.api_siat.utils.constantes.TIPO_USUARIOS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -104,9 +102,8 @@ public class AulaService {
     	try {
 	    	logger.info("Servicio: /listarAulas/{idUsuario}");
 	    	List<AulaCompuestaEntity> cursosEntity = aulaCRepository.findDistinctByAulaByAulaCompuestaIdParticipantesByAulaIdPersonaIdAndEstadoAulaByEstadoAulaIdDescripcion(idUsuario,estadoAula);
-	    	logger.info("aulasActivas: "+cursosEntity.size());
 	    	for(AulaCompuestaEntity aulaCEntity: cursosEntity) {
-				try {
+	    		try {
 					AulaEntity aulaentity = aulaCEntity.getAulaByAulaCompuestaId();
 										
 					String facultad = "";
@@ -144,6 +141,7 @@ public class AulaService {
     public List<TextoDto> obtenerNoticias(Long idAula) {
     	List<TextoDto> resultado = new ArrayList<TextoDto>();
     	try {
+    		logger.info("Servicio: /obtenerNoticias");
     		AulaEntity aula = aulaRepository.findByAulaId(idAula);    		
     		Long idComunicacion = aula.getNovedadId();    	
     		Long datetime = System.currentTimeMillis();
@@ -153,8 +151,8 @@ public class AulaService {
     		List<TextoEntity> noticias = textoRepository.ComunicacionesDisponibles(idComunicacion, false,fechaHoy);
     		
     		for(TextoEntity noticia: noticias) {
-    			TextoDto noticiaDto = AssemblerComunicacion.NoticiaPizarronEntityToDto(noticia);
-    			noticiaDto.setAulaId(idAula);
+    			TextoDto noticiaDto = AssemblerComunicacion.NoticiaPizarronEntityToDto(noticia,"E");
+    			//noticiaDto.setAulaId(idAula);
     			resultado.add(noticiaDto);
     		}
     		
@@ -174,7 +172,8 @@ public class AulaService {
     public List<TextoDto> obtenerMensajesPizarron(Long idAula,Long idPersona) {
     	List<TextoDto> resultado = new ArrayList<TextoDto>();
     	try {
-    		AulaEntity aula = aulaRepository.findById(idAula).get();
+    		logger.info("Servicio: /obtenerMensajesPizarron");
+    		//AulaEntity aula = aulaRepository.findById(idAula).get();
     		Long datetime = System.currentTimeMillis();
     		Timestamp fechaHoy = new Timestamp(datetime);
     		
@@ -190,8 +189,8 @@ public class AulaService {
 		        	    List<TextoEntity> pizarrones = textoRepository.ComunicacionesDisponibles(idComunicacion, false,fechaHoy);
 		        	    
 		        		for(TextoEntity pizarron: pizarrones) {
-		        			TextoDto pizarronDto = AssemblerComunicacion.NoticiaPizarronEntityToDto(pizarron);
-		        			pizarronDto.setAulaId(comision.getComisionId());
+		        			TextoDto pizarronDto = AssemblerComunicacion.NoticiaPizarronEntityToDto(pizarron,"EC");
+		        			//pizarronDto.setAulaId(comision.getComisionId());
 		        			resultado.add(pizarronDto);
 		        		}	        		
 		    		}
@@ -330,6 +329,7 @@ public class AulaService {
 		    			ForoDto foroDto = AssemblerComunicacion.ForoEntityToDto(foro,mensajeAdjuntoRepository);
 		    			foroDto.setTipoEventoNivel("E");//evento de aula
 		    			foroDto.setIdAula(idAula);
+		    			foroDto.setId(foro.getForoId());
 		    			resultado.add(foroDto);					
 			    	}		    		
 		        }	        
@@ -344,6 +344,7 @@ public class AulaService {
 					    		ForoDto foroDto = AssemblerComunicacion.ForoEntityToDto(foro,mensajeAdjuntoRepository);
 					    		foroDto.setTipoEventoNivel("EC");//evento de comision
 					    		foroDto.setIdAula(comision.getAulaByComisionId().getAulaId());
+					    		foroDto.setId(foro.getForoId());
 								resultado.add(foroDto);					
 					    	}	    	    		    	    	
 		    		}
@@ -405,9 +406,11 @@ public class AulaService {
  	    	ArchivoEntity archivo = (ArchivoEntity) archivos.next();
  	    	ArchivoDto archivoDTO = new ArchivoDto();
 	 		archivoDTO.setNombre(archivo.getNombre());
-	 		archivoDTO.setFechaUP(new SimpleDateFormat("dd/MM/yyyy").format(archivo.getFechaUp()));
+	 		//archivoDTO.setFechaUP(new SimpleDateFormat("dd/MM/yyyy").format(archivo.getFechaUp()));
+	 		archivoDTO.setFechaUP(archivo.getFechaUp());
 	 		archivoDTO.setDescripcion(archivo.getDescripcion());
-	 		archivoDTO.setTamanio(String.format("%.2f", archivo.getTamanio()));
+	 		//archivoDTO.setTamanio(String.format("%.2f", archivo.getTamanio()));
+	 		archivoDTO.setTamanio(archivo.getTamanio());
 	 		String url = archivo.getPath();
 	 		archivoDTO.setURL(url.substring(url.indexOf("siat2")+5));
 	 		if (archivoDTO.getURL().indexOf("lib/tomcat")>0)

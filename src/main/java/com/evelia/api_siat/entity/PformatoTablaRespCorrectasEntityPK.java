@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class PformatoTablaRespCorrectasEntityPK implements Serializable {
-    private long pformatoTablaId;
+    
+	private static final long serialVersionUID = 1L;
+	private long pformatoTablaId;
     private long fraseId;
 
     @Column(name = "PFORMATO_TABLA_ID")

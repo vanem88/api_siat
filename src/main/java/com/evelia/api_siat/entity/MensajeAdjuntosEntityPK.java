@@ -5,7 +5,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class MensajeAdjuntosEntityPK implements Serializable {
-    private long mensajeId;
+   
+	private static final long serialVersionUID = 1L;
+	private long mensajeId;
     private long archivoId;
 
     @Column(name = "MENSAJE_ID")

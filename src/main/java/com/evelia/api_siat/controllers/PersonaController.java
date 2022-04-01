@@ -2,6 +2,7 @@ package com.evelia.api_siat.controllers;
 
 import com.evelia.api_siat.dto.PersonaDto;
 import com.evelia.api_siat.services.PersonaService;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,14 @@ public class PersonaController {
         return this.personaService.obtenerPorId(id);
     }
     
-  /*   @PostMapping(path = "/save")
+    @PutMapping(path = "/modificarPerfil")
+    public boolean modificarPerfil(@RequestParam(value ="idPersona",required = true) Long idPersona,@RequestParam("email") String email,@RequestParam("fotoPerfil") String fotoPerfil){
+   	 	System.out.println("modificarPerfil");
+   	 	return this.personaService.modificarPerfil(idPersona,email,fotoPerfil);
+    }
+    
+    
+ /*@PostMapping(path = "/save")
      public PersonaDto guardarUsuario(@RequestBody Persona usuario){
     	 System.out.println("guardarUsuario");
     	 return this.personaService.guardarUsuario(usuario);

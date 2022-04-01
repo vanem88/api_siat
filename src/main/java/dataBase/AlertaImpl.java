@@ -16,7 +16,7 @@ public class AlertaImpl extends BaseDao{
 		alerta.setTipoElemento(rs.getString("TIPO_ELEMENTO"));
 		alerta.setAlertaId(rs.getLong("ALERTA_ID"));
 		alerta.setReferenciaElementoId(rs.getLong("REFERENCIA_ELEMENTO_ID"));
-		return alerta;
+		return alerta;		
 	}
 	
 }

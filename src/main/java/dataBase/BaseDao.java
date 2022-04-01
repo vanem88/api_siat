@@ -7,12 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Patrón de método de plantilla
  * **/
 public abstract class BaseDao {
-
+	
 	/**
 	 * Agregar, eliminar, cambiar métodos
 	 * @param sql
@@ -24,7 +23,6 @@ public abstract class BaseDao {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			//conn = JdbcUtils.getConnection();
 			conn = DataSource.getConnection();
 			ps = conn.prepareStatement(sql);
 			for (int i = 0; i < args.length; i++)
@@ -55,8 +53,9 @@ public abstract class BaseDao {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
+			
 			conn = DataSource.getConnection();
-    		ps = conn.prepareStatement(sql);
+			ps = conn.prepareStatement(sql);
 			for (int i = 0; i < args.length; i++) 				
 				ps.setObject(i + 1, args[i]);
 			

@@ -1,8 +1,6 @@
 package com.evelia.api_siat.utils.assembler;
 
 import java.sql.Timestamp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.evelia.api_siat.dto.ActividadDto;
 import com.evelia.api_siat.dto.CalificacionDto;
 import com.evelia.api_siat.entity.ActividadEntity;
@@ -10,7 +8,6 @@ import com.evelia.api_siat.entity.AutoexamenEntity;
 import com.evelia.api_siat.entity.AutoexamenFinalizadoEntity;
 import com.evelia.api_siat.entity.CalificacionActividadEntity;
 import com.evelia.api_siat.entity.EvaluacionEntity;
-import com.evelia.api_siat.entity.EvaluacionFinalizadaConRespuestasEntity;
 import com.evelia.api_siat.entity.EvaluacionFinalizadaEntity;
 import com.evelia.api_siat.entity.ExamenEntity;
 import com.evelia.api_siat.entity.ExamenFinalizadoEntity;
@@ -22,7 +19,7 @@ import com.evelia.api_siat.utils.constantes.TIPOS_CALIFICACION;
 
 public class AssemblerCalificacion {
 	
-	private final static Logger logger = LoggerFactory.getLogger(AssemblerCalificacion.class);
+	//private final static Logger logger = LoggerFactory.getLogger(AssemblerCalificacion.class);
 	 	      
     /**
      * Convierte un actividad Entity en su respectivo DTO

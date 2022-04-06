@@ -39,7 +39,7 @@ public class AuthController {
     @Autowired
     JwtUtil JwtUtil;
 
-    @PostMapping("/login")
+ 	@PostMapping("/login")
     public ResponseEntity<JwtDto> login(@Valid @RequestBody User User, BindingResult bindingResult){
     	if(bindingResult.hasErrors())
             return new ResponseEntity("campos mal puestos", HttpStatus.BAD_REQUEST);

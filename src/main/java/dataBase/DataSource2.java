@@ -4,10 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 
 //@SuppressWarnings("deprecation")
 //@RestController

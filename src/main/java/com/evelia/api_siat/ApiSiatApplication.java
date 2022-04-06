@@ -3,10 +3,18 @@ package com.evelia.api_siat;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+import com.evelia.api_siat.property.FileStorageProperties;
+
 @SpringBootApplication
-//public class ApiSiatApplication {
+//Para trabajar con archivo
+@EnableConfigurationProperties({
+        FileStorageProperties.class
+})
+
+
 public class ApiSiatApplication extends SpringBootServletInitializer  {
 	
 	//Para generar el war

@@ -9,15 +9,12 @@ import java.io.*;
 public class Util{  
   private  static String KEY_STRING = "";
 
- public void setString(String string)
- {
+ public void setString(String string){
    KEY_STRING = string;
  }
 
-  public String encrypt(String source )
-  {
-    try
-    {
+  public String encrypt(String source ){
+    try{
       // Get our secret key
       Key key = getKey();
 
@@ -37,33 +34,27 @@ public class Util{
       // Return a String representation of the cipher text
       return getString( ciphertext );
     }
-    catch( Exception e )
-    {
+    catch( Exception e ) {
       e.printStackTrace();
     }
     return null;
   }
 
-  public static String generateKey()
-  {
-    try
-    {
+  public static String generateKey() {
+    try{
       KeyGenerator keygen = KeyGenerator.getInstance("DES");
       SecretKey desKey = keygen.generateKey();
       byte[] bytes = desKey.getEncoded();
       return getString( bytes );
     }
-    catch( Exception e )
-    {
+    catch( Exception e ){
       e.printStackTrace();
       return null;
     }
   }
 
-  public static String decrypt( String source )
-  {
-    try
-    {
+  public static String decrypt( String source ){
+    try {
       // Get our secret key
       Key key = getKey();
 
@@ -83,25 +74,21 @@ public class Util{
       // Return the clear text
       return new String( cleartext );
     }
-    catch( Exception e )
-    {
+    catch( Exception e ){
       e.printStackTrace();
     }
     return null;
   }
 
-  private static Key getKey()
-  {
-    try
-    {
+  private static Key getKey() {
+    try{
       byte[] bytes = getBytes( KEY_STRING );
       DESKeySpec pass = new DESKeySpec( bytes );
       SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
       SecretKey s = skf.generateSecret(pass);
       return s;
     }
-    catch( Exception e )
-    {
+    catch( Exception e ) {
       e.printStackTrace();
     }
     return null;
@@ -110,8 +97,7 @@ public class Util{
   /**
    * Returns true if the specified text is encrypted, false otherwise
    */
-  public static boolean isEncrypted( String text )
-  {
+  public static boolean isEncrypted( String text ) {
     // If the string does not have any separators then it is not
     // encrypted
     if( text.indexOf( '-' ) == -1 ) {
@@ -174,6 +160,8 @@ public class Util{
 	           .replace("&quot;","\"")   
 	           .replace("&#039;","'");   
 	 }
+  
+ 
   
   
 }

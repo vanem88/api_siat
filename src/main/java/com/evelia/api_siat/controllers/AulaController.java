@@ -5,7 +5,7 @@ import com.evelia.api_siat.dto.AulaCompuestaDto;
 import com.evelia.api_siat.dto.CarpetaDto;
 import com.evelia.api_siat.dto.ForoDto;
 import com.evelia.api_siat.dto.TextoDto;
-import com.evelia.api_siat.repositories.TextoRepository;
+//import com.evelia.api_siat.repositories.TextoRepository;
 import com.evelia.api_siat.services.AulaService;
 import com.evelia.api_siat.utils.constantes.ESTADO_AULAS;
 import java.util.List;
@@ -19,8 +19,8 @@ public class AulaController {
 	@Autowired
     AulaService aulaService;
 	
-	@Autowired
-	TextoRepository textRepository;
+	//@Autowired
+	//TextoRepository textRepository;
 	    
     
     /**

@@ -17,30 +17,6 @@ public class ProcesosConArchivos {
 		  else return CONSTANTES_SO.LINUX;	    
 	  } 
 	 
-	 public static boolean copiarArchivo(String archivoOrigen, String carpetaDestino) throws Exception{	  
-		  try{
-			  String sentencia = "";
-			  if(consultarSistemaOperativo().compareTo(CONSTANTES_SO.LINUX)==0)
-				  sentencia = "cp "+" "+archivoOrigen+" "+carpetaDestino;
-			  if(consultarSistemaOperativo().compareTo(CONSTANTES_SO.WINDOWS)==0) 
-				  sentencia = "cmd /c copy \""+archivoOrigen+"\" \""+carpetaDestino+"\"";				 
-			  if(sentencia.compareTo("")!=0) {
-			      int exitCode = ejecutarProceso(sentencia);
-				  if(exitCode==0) return true;
-				   else{
-					  System.out.println("Algo mal hubo en el copiar archivo:"+exitCode);
-					  return false;
-				  }
-			  }else{
-				  System.out.println("No se puede mover o renombrar el archivo porque el sistema no está corriendo sobre Linux ni windows");
-				  return true; 
-			  }			  
-		  }catch(Exception ex){
-			  System.out.println("Exception");
-			  return false;
-		  }		 
-	  }
-	 
 	 public static boolean renombrarArchivo(String archivoOrigen, String archivoDestino) throws Exception{	  
 		  try{			
 		    File oldfile = new File(archivoOrigen);
@@ -52,8 +28,7 @@ public class ProcesosConArchivos {
 			  System.out.println("Exception");
 			  return false;
 		  }		 
-	  }
-	 
+	  }	 
 	 
 	 public static int ejecutarProceso(String sentencia) throws Exception{		
 		  Process process = Runtime.getRuntime().exec(sentencia);
@@ -61,6 +36,31 @@ public class ProcesosConArchivos {
 		  process.waitFor();
 		  //Codigo de salida del proceso.
 		  return process.exitValue();	  
-  }
+      }
+	 
+	 /* public static boolean copiarArchivo(String archivoOrigen, String carpetaDestino) throws Exception{	  
+	  try{
+		  String sentencia = "";
+		  if(consultarSistemaOperativo().compareTo(CONSTANTES_SO.LINUX)==0)
+			  sentencia = "cp "+" "+archivoOrigen+" "+carpetaDestino;
+		  if(consultarSistemaOperativo().compareTo(CONSTANTES_SO.WINDOWS)==0) 
+			  sentencia = "cmd /c copy \""+archivoOrigen+"\" \""+carpetaDestino+"\"";				 
+		  if(sentencia.compareTo("")!=0) {
+		      int exitCode = ejecutarProceso(sentencia);
+			  if(exitCode==0) return true;
+			   else{
+				  System.out.println("Algo mal hubo en el copiar archivo:"+exitCode);
+				  return false;
+			  }
+		  }else{
+			  System.out.println("No se puede mover o renombrar el archivo porque el sistema no está corriendo sobre Linux ni windows");
+			  return true; 
+		  }			  
+	  }catch(Exception ex){
+		  System.out.println("Exception");
+		  return false;
+	  }		 
+ }*/
+
 
 }

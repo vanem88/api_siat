@@ -1,9 +1,9 @@
-/*package com.evelia.api_siat.controllers;
+package com.evelia.api_siat.controllers;
 
 import com.evelia.api_siat.entity.ComisionEntity;
 import com.evelia.api_siat.entity.ParticipanteComisionEntity;
 import com.evelia.api_siat.entity.ParticipanteEntity;
-import com.evelia.api_siat.entity.PersonaEntity;
+
 import com.evelia.api_siat.repositories.ParticipanteComisionRepository;
 import com.evelia.api_siat.repositories.ParticipanteRepository;
 import com.evelia.api_siat.repositories.PersonaRepository;
@@ -11,6 +11,9 @@ import com.evelia.api_siat.repositories.AulaRepository;
 import com.evelia.api_siat.repositories.ComisionRepository;
 import com.evelia.api_siat.services.AulaService;
 import persistencia.Persistencia;
+import persistencia.dominio.Aula;
+import persistencia.dominio.Nota;
+import persistencia.dominio.Participante;
 import persistencia.dominio.Persona;
 
 import java.sql.Connection;
@@ -61,8 +64,13 @@ public class TestPerformanceController {
     	logger.info("Servicio: performanceTJDO "+idAula);
      	try{
 			this.iniciarPersistencia();
-			String filtro="aula.id == "+idAula;
+			
+					String filtro="aula.id == "+idAula;
 		    Vector participantes = persistencia.getObjectosPorClaseYFiltro("persistencia.dominio.Participante","",filtro);
+		    Participante a =  (Participante)participantes.elementAt(0);
+		    logger.info("a: "+a);
+		    Aula au = a.getAula();
+		    logger.info("aula: "+au);
 		    logger.info("participantes: "+participantes.size());
 		    this.commit();
 		} catch (Exception e) {
@@ -270,4 +278,4 @@ public class TestPerformanceController {
 	    
 	   
   
-}*/
+}

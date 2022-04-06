@@ -2,15 +2,15 @@ package com.evelia.api_siat.controllers;
 
 import com.evelia.api_siat.dto.PersonaDto;
 import com.evelia.api_siat.services.PersonaService;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/usuario")
 public class PersonaController {
     
-    @Autowired
+	@Autowired
     PersonaService personaService;
     
     /**
@@ -22,12 +22,12 @@ public class PersonaController {
     public PersonaDto obtenerUsuarioPorId(@PathVariable("id") Long id) {  
         return this.personaService.obtenerPorId(id);
     }
-    
-    @PutMapping(path = "/modificarPerfil")
-    public boolean modificarPerfil(@RequestParam(value ="idPersona",required = true) Long idPersona,@RequestParam("email") String email,@RequestParam("fotoPerfil") String fotoPerfil){
-   	 	System.out.println("modificarPerfil");
-   	 	return this.personaService.modificarPerfil(idPersona,email,fotoPerfil);
+      
+    @PutMapping("/modificarPerfil")
+    public String modificarPerfil(@RequestParam(value ="idPersona",required = true) Long idPersona,@RequestParam("email") String email,@RequestParam("fotoPerfil") MultipartFile fotoPerfil) {
+    	return this.personaService.modificarPerfil(idPersona,email,fotoPerfil);    	
     }
+    
     
     
  /*@PostMapping(path = "/save")

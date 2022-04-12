@@ -1,4 +1,6 @@
 package com.evelia.api_siat.controllers;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +23,7 @@ public class ActividadController {
     public String entregarActividad(@RequestParam(value ="idPersona",required = true) Long idPersona,
     		                        @RequestParam(value ="idActividad",required = true) Long idActividad,
     		                        @RequestParam("comentario") String comentario,
-    		                        @RequestParam(value ="archivo",required = true) MultipartFile archivosEntregados) {
+    		                        @RequestParam(value ="archivo",required = true) List<MultipartFile> archivosEntregados) {
 		try {
 			return actividadService.entregarActividad(idPersona,idActividad, comentario, archivosEntregados);			
 		}catch(Exception ex) {

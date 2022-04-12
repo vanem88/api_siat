@@ -247,25 +247,10 @@ public class AulaService {
 	    	if(participantes.size()>0) {
    				ParticipanteEntity participante = participantes.get(0);   				
    				List<ComisionEntity> comisiones = comisionRepository.findDistinctByParticipanteComisionsByComisionIdParticipanteIdAndAulaByComisionIdAulaCompuestaId(participante.getParticipanteId(), idAula);
-  		        				
-		    	//for (AulaEntity comision: comisiones) {
-   				for (ComisionEntity comision: comisiones) {
-		    		//if (permisos.tienePermisoComision(idAula,comision.getAulaId(),idPersona,RECURSOS.ACTIVIDADES)) {	    
+  		    	for (ComisionEntity comision: comisiones) {
    					List<PermisoAccesoEntity> permisos = permisoAccesoRepository.findByRecursoByRecursoIdNombreAndAulaIdAndTipoUsuarioId(RECURSOS.ACTIVIDADES, comision.getComisionId(), participante.getTipoUsuarioId());
-		   			if(!permisos.isEmpty()) {		        	
-		    			/*Long idCalendarioComision = comision.getAulaByComisionId().getCalendarioId();
-		    	    	if(idCalendarioComision!=null) {	    	
-		    	    		List<TextoEntity> actividadesComision = textoRepository.findByComunicacionIdAndEliminadoAndTipoEventoOrPersonaId(idCalendarioComision,false,RECURSOS.ACTIVIDADES,idPersona);
-		    	    		logger.info("Cantidad de actividades de la comision: "+actividadesComision.size());	    	    		
-		    		    	for (TextoEntity actividadComision: actividadesComision) {      		    						
-		    		    		EventoDto actividadComisionDto = AssemblerObjetos.EventoEntityToDto(actividadComision);
-		    					actividadComisionDto.setTipoEventoNivel("EC");//evento de comision 
-		    					resultado.add(actividadComisionDto);				    					
-		    		    	}
-		    	    	}*/
-		   				//List<ActividadEntity> actividadesComision = actividadRepository.findDistinctByAulaId(comision.getComisionId());
-		   				List<ActividadEntity> actividadesComision = actividadRepository.ActividadesDisponibles(comision.getComisionId(),fechaHoy);
-		   				
+   					if(!permisos.isEmpty()) {	
+   						List<ActividadEntity> actividadesComision = actividadRepository.ActividadesDisponibles(comision.getComisionId(),fechaHoy);
 		   				for (ActividadEntity actividadComision: actividadesComision) {      		    						
 		   					ActividadDto actividadComisionDto = AssemblerCalificacion.ActividadEntityToDto(actividadComision);
 		   					ActividadArchivosAdjuntosEntity archivo = actividadArchivosAdjuntosRepository.findByActividadId(actividadComision.getActividadId());
@@ -273,7 +258,6 @@ public class AulaService {
 	    						actividadComisionDto.setArchivoAdjunto(archivo.getArchivoByArchivoId().getPath());
 		   					resultado.add(actividadComisionDto);				    					
 	    		    	}
-		   				
 		   			}
 		    	} 
 	    	}
@@ -385,7 +369,7 @@ public class AulaService {
 	        logger.info("Servicio: /obtenerMateriales");	  
 	        
 	        AulaEntity aula = aulaRepository.findById(idAula).get();
-	        if (permisos.tienePermisoAula(idAula,idUsuario,RECURSOS.MATERIALES)) {	          	
+	        if (permisos.tienePermisoAula(idAula,idUsuario,RECURSOS.MATERIALES)) {	
 	        	MaterialEntity material = aula.getMaterialByMaterialId();	
 	        	CarpetaDto carpetaDTO = obtenerCarpetaDTO(material.getCarpetaByMaterialId());
 	        	return carpetaDTO;	        	

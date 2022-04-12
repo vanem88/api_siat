@@ -12,7 +12,6 @@ import com.evelia.api_siat.repositories.ComisionRepository;
 import com.evelia.api_siat.services.AulaService;
 import persistencia.Persistencia;
 import persistencia.dominio.Aula;
-import persistencia.dominio.Nota;
 import persistencia.dominio.Participante;
 import persistencia.dominio.Persona;
 

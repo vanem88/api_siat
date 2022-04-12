@@ -21,6 +21,7 @@ public class ActividadDto implements Serializable {
     private String persona;
     private String pathFotoPerfil;
     private String archivoAdjunto;
+    private Long actividadid;
     
 	public Long getAulaId() {
 		return aulaId;
@@ -113,6 +114,13 @@ public class ActividadDto implements Serializable {
 	public void setPathFotoPerfil(String pathFotoPerfil) {
 		this.pathFotoPerfil = pathFotoPerfil;
 	}
+	public Long getActividadid() {
+		return actividadid;
+	}
+	public void setActividadid(Long actividadid) {
+		this.actividadid = actividadid;
+	}
+	
 	
    
 	

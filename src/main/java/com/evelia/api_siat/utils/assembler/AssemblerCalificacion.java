@@ -43,6 +43,8 @@ public class AssemblerCalificacion {
     			actividadDto.setPathFotoPerfil(actividad.getPersonaByPersonaId().getPathFoto());
     		}
     		
+    		actividadDto.setActividadid(actividad.getActividadId());  		
+    		
     		
 	    	return actividadDto;
     	}catch(Exception ex) {

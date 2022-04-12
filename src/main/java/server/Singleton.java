@@ -2,8 +2,6 @@ package server;
 
 import javax.jdo.PersistenceManagerFactory;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class Singleton {
 
   static private PersistenceManagerFactory pmf=null;
@@ -12,21 +10,21 @@ public class Singleton {
   
   /**---------------------------------- SERVER PRUEBA (prueba.evelia.unrc.edu.ar) ------------------------------------------------------------------------------**/
   
-  static public final String HOME_DIR = "C:\\desarrolloVane\\ClienteSisinfoAPI\\";
-  static public final String DIR_ARCHIVOS = "C:\\desarrolloVane\\ClienteSisinfoAPI\\";
+  //static public final String HOME_DIR_RELATIVO = "/siat2/";
+  //static public final String HOME_DIR = "C:\\desarrolloVane\\api_siat\\";
+   
  
    //static public final String HOME_DIR_RELATIVO = "/montagna/";
-   //static public final String DIR_ARCHIVOS = "/var/lib/tomcat9/webapps/montagna/";
+   static public final String HOME_DIR = "/var/lib/tomcat9/webapps/api_siat/WEB-INF/classes";
     
-    
+	/**---------------------------------- LOCAL (ambiente de desarrollo, localhost) ------------------------------------------------------------------------------**/
 
-  /**---------------------------------- LOCAL (ambiente de desarrollo, localhost) ------------------------------------------------------------------------------**/
-
-    /*Archivos de configuraci�n*/ 
-   static public final String ARCHIVO_INI_CONFIGURACION_SERVIDOR_DE_PRUEBAS_o_PRODUCCION = HOME_DIR+"config.ini";
-   static private String archivoIni = ARCHIVO_INI_CONFIGURACION_SERVIDOR_DE_PRUEBAS_o_PRODUCCION;
+    /*Archivos de configuracion*/ 
+  //static public final String ARCHIVO_INI_CONFIGURACION_SERVIDOR_DE_PRUEBAS_o_PRODUCCION = HOME_DIR+"configuracion/siatReloaded.ini";
+  //static private String archivoIni = "/application.properties";
+  static private String archivoIni = HOME_DIR+"/application.properties";
    static public String HOME_DIR_ARCHIVOS = "";
-   static public String HOME_DIR_LOGS = "";
+  // static public String HOME_DIR_LOGS = "";
  
    static public int cantidadBeginTransaction = 0;
    static public int cantidadCommitTransaction = 0;
@@ -41,16 +39,16 @@ public class Singleton {
    public Singleton() {}
    
    //Este metodo es el unico que se llama desde persistencia
-   static synchronized public PersistenceManagerFactory getPmf() {
+   static synchronized public PersistenceManagerFactory getPmf() {	  
 	 if (server==null){
-     	 server = new Server();
+     	 server = new Server(archivoIni);
        generarRutasAplicacion();
      }
      return pmf;
    }
    
    static synchronized public void reiniciarBaseDatos(){
-     server = new Server();
+     server = new Server(archivoIni);
      generarRutasAplicacion();
    }
    
@@ -59,8 +57,8 @@ public class Singleton {
    }
 
    private static void generarRutasAplicacion(){
- 	  HOME_DIR_ARCHIVOS = DIR_ARCHIVOS+Server.getPathArchivos();
- 	  HOME_DIR_LOGS = DIR_ARCHIVOS+Server.getPathLogss(); 	  
+	  HOME_DIR_ARCHIVOS = HOME_DIR+Server.getPathArchivos();
+ 	//  HOME_DIR_LOGS = HOME_DIR+Server.getPathLogss(); 	  
    }
    
  }

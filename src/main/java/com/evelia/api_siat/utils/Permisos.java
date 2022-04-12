@@ -36,10 +36,10 @@ public class Permisos {
      			
    			List<ParticipanteEntity> participantes = participanteRepository.findByAulaIdAndPersonaId(idAula,idPersona);
    			if(participantes.size()>0) {
-	   			ParticipanteEntity participante = participantes.get(0);	   			
+   				ParticipanteEntity participante = participantes.get(0);	   			
 	   			if (participante != null & participante.getTipoUsuarioByTipoUsuarioId() == null)
 	   				return false;
-	  			List<PermisoAccesoEntity> permisos = permisoAccesoRepository.findByRecursoByRecursoIdNombreAndAulaIdAndTipoUsuarioId(recurso, idAula, participante.getTipoUsuarioId());
+	   			List<PermisoAccesoEntity> permisos = permisoAccesoRepository.findByRecursoByRecursoIdNombreAndAulaIdAndTipoUsuarioId(recurso, idAula, participante.getTipoUsuarioId());
 	   			if(permisos.isEmpty()) return false;
 	  	  	   	   		    
    			}else

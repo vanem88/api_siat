@@ -8,6 +8,7 @@ public class NotaImpl extends BaseDao{
 	
 	public NotaImpl(){}
 	
+	@SuppressWarnings("unchecked")
 	protected Object rowMapper(ResultSet rs) throws SQLException {
 		NotaEntity nota = new NotaEntity();
 		nota.setNotaId(rs.getLong("NOTA_ID"));

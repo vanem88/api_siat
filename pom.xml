@@ -26,7 +26,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>           
          </dependency>
-          
+                  
          <!-- <dependency>
 			    <groupId>org.springframework.boot</groupId>
 			    <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -45,6 +45,9 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        
+        
+         
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -66,6 +69,8 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        
+            
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -100,12 +105,64 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.8.7</version>
-		</dependency>		
+		</dependency>
+		
+		<!-- Dependencias propias -->
+		<!-- mvn install:install-file -Dfile=C:\desarrolloVane\api_siat\lib\siatReloaded.jar -DgroupId=siat -DartifactId=siatReloaded -Dversion=1.1.0 -Dpackaging=jar -->
+		<dependency>
+			<groupId>siat</groupId>
+			<artifactId>siatReloaded</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		
+		<!-- mvn install:install-file -Dfile=C:\desarrolloVane\api_siat\lib\jdoyTjdo\jdo.jar -DgroupId=jdoYTjdo -DartifactId=jdo -Dversion=1.1.0 -Dpackaging=jar -->
+		<dependency>
+			<groupId>jdoyTjdo</groupId>
+			<artifactId>jdo</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		
+		<!-- mvn install:install-file -Dfile=C:\desarrolloVane\api_siat\lib\jdoyTjdo\tjdo.jar -DgroupId=jdoYTjdo -DartifactId=tjdo -Dversion=1.1.0 -Dpackaging=jar -->
+		<dependency>
+			<groupId>jdoyTjdo</groupId>
+			<artifactId>tjdo</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		
+		<!-- mvn install:install-file -Dfile=C:\desarrolloVane\api_siat\lib\jdoyTjdo\jdori.jar -DgroupId=jdoYTjdo -DartifactId=jdori -Dversion=1.1.0 -Dpackaging=jar -->
+		<dependency>
+			<groupId>jdoyTjdo</groupId>
+			<artifactId>jdori</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		
+		<!-- mvn install:install-file -Dfile=C:\desarrolloVane\api_siat\lib\jdoyTjdo\jdori-enhancer.jar -DgroupId=jdoYTjdo -DartifactId=jdori-enhancer -Dversion=1.1.0 -Dpackaging=jar -->
+		<dependency>
+			<groupId>jdoyTjdo</groupId>
+			<artifactId>jdori-enhancer</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		
+		<!-- mvn install:install-file -Dfile=C:\desarrolloVane\api_siat\lib\jdoyTjdo\log4j-1.2.8.jar -DgroupId=jdoYTjdo -DartifactId=log4j-1.2.8 -Dversion=1.1.0 -Dpackaging=jar -->
+		<dependency>
+			<groupId>jdoyTjdo</groupId>
+			<artifactId>log4j-1.2.8</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		
+		<!-- mvn install:install-file -Dfile=C:\desarrolloVane\api_siat\lib\jdoyTjdo\xml-apis.jar -DgroupId=jdoYTjdo -DartifactId=xml-apis -Dversion=1.1.0 -Dpackaging=jar -->
+		<dependency>
+			<groupId>jdoyTjdo</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		
+			
 	</dependencies>
 
-	<build>
+	<build>	   
 		<plugins>
-			<plugin>
+		    <plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>

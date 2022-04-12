@@ -3,59 +3,55 @@ package server;
 import java.util.*;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
 import persistencia.*;
+import utils.IniFile;
 
 @Component
 public class Server{
-		
+	
 	static public String PATH_ARCHIVOS = ""; 
 	static public String PATH_LOGS = ""; 
+	static public String NOMBRE_SERVIDOR = "";
+	static public String RUTA_HTTP_SERVIDOR = "";
+	static public String APLICACION = "";
+	static public String SERVIDOR_EXTERNO = "";
 	
-	//@Value("${jdo.pmfClass}")
-	private String pmfClass = "com.triactive.jdo.PersistenceManagerFactoryImpl";
-	//@Value("${spring.datasource.driverClassName}")
-	private String driver = "com.mysql.cj.jdbc.Driver";
-	//@Value("${spring.datasource.url}")
-	private String url ="jdbc:mysql://localhost:3306/datosEveliaMinimo?useUnicode=true&characterEncoding=utf8";
-	//@Value("${spring.datasource.username}")
-	private String userName ="root";
-	//@Value("${spring.datasource.password}")
-	private String password ="";
-	//@Value("${jdo.autoCreateTable}")
-	private String autoCreateTable = "true";	
-	//@Value("${jdo.validateConstraints}")
-	private String validateConstraints = "false";
-	//@Value("${jdo.validateTables}")
-	private String validateTables = "false";
+	static public String PORT_SERVIDOR_EXTERNO = "";
+	static public String GETTRANSPORT_SERVIDOR_EXTERNO = "";
+	static public String USUARIO_SERVIDOR_EXTERNO = "";
+	static public String CLAVE_SERVIDOR_EXTERNO = "";
+	static public String HOST_SERVIDOR_EXTERNO = "";
 	
-	
-	
-	
-		
-	public Server(){
+	public Server(String archivoIni){
 		try{
 			
 			System.out.println("FECHA y HORA del (RE)INICIO del SERVER ========> "+utils.Utils.hoySqlDate());
-			System.out.println("HOME_DIR DE SINGLETON .................."+Singleton.HOME_DIR);
-			System.out.println("DIR_ARCHIVOS DE SINGLETON........."+Singleton.DIR_ARCHIVOS);
+			//System.out.println("HOME_DIR DE SINGLETON .................."+Singleton.HOME_DIR);
+							
+			IniFile iniFile = new IniFile();
+			iniFile.setNameFile(archivoIni); 
 			
+			NOMBRE_SERVIDOR = iniFile.getParametro("nombreServidor");			
+			RUTA_HTTP_SERVIDOR = iniFile.getParametro("rutaHTTPServidor")+NOMBRE_SERVIDOR+"/";
+			APLICACION = iniFile.getParametro("aplicacion");
+			PATH_ARCHIVOS = iniFile.getParametro("file.upload-dir"); 
+			SERVIDOR_EXTERNO = iniFile.getParametro("file.upload-dir"); 
 			
-				    	
-	    	// Configuracion TJDO (Obteniendo datos del archivo de configuraci�n siatReloaded.ini)
+			HOST_SERVIDOR_EXTERNO = iniFile.getParametro("smtpHostservidorExterno");
+			USUARIO_SERVIDOR_EXTERNO = iniFile.getParametro("usuarioCorreoServidorExterno");
+			CLAVE_SERVIDOR_EXTERNO = iniFile.getParametro("claveCorreoServidorExterno");
+			GETTRANSPORT_SERVIDOR_EXTERNO = iniFile.getParametro("getTransportservidorExterno");
+			PORT_SERVIDOR_EXTERNO = iniFile.getParametro("portservidorExterno");
 			
-			
-			/*String pmfClass = iniFile.getParametro("pmfClass").trim();//com.triactive.jdo.PersistenceManagerFactoryImpl
-			String driver = iniFile.getParametro("driver").trim();//org.gjt.mm.mysql.Driver
-			String url = iniFile.getParametro("url").trim();
-			String userName = iniFile.getParametro("userName").trim();
-			String password = iniFile.getParametro("password").trim();
-			String autoCreateTable = iniFile.getParametro("autoCreateTable").trim();
-			String validateConstraints = iniFile.getParametro("validateConstraints").trim();
-			String validateTables = iniFile.getParametro("validateTables").trim();*/
+			String pmfClass = iniFile.getParametro("pmfClass");//com.triactive.jdo.PersistenceManagerFactoryImpl
+			String driver = iniFile.getParametro("spring.datasource.driverClassName");//org.gjt.mm.mysql.Driver
+			String url = iniFile.getParametro("spring.datasource.url");
+			String userName = iniFile.getParametro("spring.datasource.username");
+			String password = iniFile.getParametro("spring.datasource.password");
+			String autoCreateTable = iniFile.getParametro("autoCreateTable");
+			String validateConstraints = iniFile.getParametro("validateConstraints");
+			String validateTables = iniFile.getParametro("validateTables");
 			
 			// Para configuracion TJDO
 			Properties props_actual = new Properties();
@@ -67,6 +63,7 @@ public class Server{
 			props_actual.setProperty("com.triactive.jdo.validateConstraints", validateConstraints);			
 			props_actual.setProperty("com.triactive.jdo.validateTables", validateTables);	
 			props_actual.setProperty("javax.jdo.option.ConnectionURL",url);
+			
 			
 			// SETEO LOS VALORES DE LA CONECCION A LA BASE DE DATOS PARA SER USADOS EN LA EJECUCION DE QUERIES DIRECTAMENTE EN SQL
 			Singleton.driver = driver;
@@ -82,7 +79,7 @@ public class Server{
 
 			// setear el SINGLETON
 			Singleton.setPmf(pmf_actual);				
-
+						
 			//	Setea el valor semilla que usa el algoritmo de encriptacion			
 			//server.general.Util.setString(Server.SEMILLA_ENCRIPTACION);
 			
@@ -91,14 +88,13 @@ public class Server{
 		}
 	}
 
-	
 	public static final String getPathArchivos() {
 		return PATH_ARCHIVOS;
 	}
 	
-	public static final String getPathLogss() {
+	/*public static final String getPathLogss() {
 		return PATH_LOGS;
-	}
+	}*/
 
 	
 		

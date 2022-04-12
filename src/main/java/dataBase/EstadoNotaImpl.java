@@ -8,6 +8,7 @@ public class EstadoNotaImpl  extends BaseDao{
 	
 	public EstadoNotaImpl() {}
 	
+	@SuppressWarnings("unchecked")
 	protected Object rowMapper(ResultSet rs) throws SQLException {
 		EstadoNotaEntity estadoNota = new EstadoNotaEntity();
 		estadoNota.setEstadoNotaId(rs.getLong("ESTADO_NOTA_ID"));

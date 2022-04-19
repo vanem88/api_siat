@@ -5,17 +5,13 @@ import com.evelia.api_siat.entity.PersonaEntity;
 import com.evelia.api_siat.repositories.PersonaRepository;
 import com.evelia.api_siat.utils.MHelper;
 import dataBase.PersonaImpl;
-import persistencia.dominio.Persona;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.evelia.api_siat.utils.ProcesosConArchivos;
@@ -27,12 +23,9 @@ public class PersonaService {
     @Autowired
     PersonaRepository personaRepository;
     
-    @Value("${file.upload-dir}"+"${file.photo-dir}")
+    @Value("${file.aplicacion-dir}"+"${file.archivos-dir}"+"${file.fotos-dir}")
     private String pathFoto;
-    
-    @Value("${file.photo-dir}")
-    private String pathSoloFoto;
-   
+       
     public PersonaDto obtenerPorId(Long id){
        logger.info("Servicio: /obtenerUsuarioPorId");
        return MHelper.modelMapper().map(personaRepository.findById(id).get(),PersonaDto.class);

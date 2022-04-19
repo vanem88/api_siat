@@ -7,11 +7,12 @@ import java.util.*;
 import java.io.*;
 
 public class Util{  
+	
   private  static String KEY_STRING = "";
 
- public void setString(String string){
+  public void setString(String string){
    KEY_STRING = string;
- }
+  }
 
   public String encrypt(String source ){
     try{
@@ -94,9 +95,6 @@ public class Util{
     return null;
   }
 
-  /**
-   * Returns true if the specified text is encrypted, false otherwise
-   */
   public static boolean isEncrypted( String text ) {
     // If the string does not have any separators then it is not
     // encrypted
@@ -158,10 +156,16 @@ public class Util{
 	           .replace("&iquest;","¿")   
 	           .replace("&iexcl;","¡")   
 	           .replace("&quot;","\"")   
-	           .replace("&#039;","'");   
+	           .replace("&#039;","'")
+	           .replace("Ã¡","á")
+	           .replace("Ã©","é")
+	           .replace("Ã","í")
+	           .replace("Ã³","ó")
+	           .replace("Ãº","ú")
+	           .replace("Ã±","ñ")
+	           .replace("Ã‘","Ñ")
+	           
+	           ;   
 	 }
-  
- 
-  
   
 }

@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.util.unit.DataSize;
 import org.springframework.util.unit.DataUnit;
 
-
 @SpringBootApplication
 public class ApiSiatApplication extends SpringBootServletInitializer  {
 		
@@ -34,5 +33,5 @@ public class ApiSiatApplication extends SpringBootServletInitializer  {
         return factory.createMultipartConfig();  
     }  
 	
-
+	
 }

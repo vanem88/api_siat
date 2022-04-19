@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	
+</head>
+
+	  <body  class="hm-gradient" data-spy="scroll" data-target="#main-nav-collapse">
+		<div style="background-color: #fff;">
+			<table align="center" style="border-collapse: collapse; table-layout: fixed; Margin-left: auto; Margin-right: auto; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #ffffff;">
+			<tbody>
+			<tr>
+				<td class="column" style='font-size: 14px; line-height: 21px; padding: 0; text-align: left; vertical-align: top; color: #60666d; font-family:\"Open Sans\", sans-serif;' width="600">
+				<div style="font-size: 12px; font-style: normal; font-weight: 400;\" align="center">
+				<a th:href="@{${urlSIAT}}">
+				     <img th:src="@{${CIDimagenCabecera}}" class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top";style="display: block; border: 0; max-width: 900px;" width="600" height="39" />
+				</a>
+				</div>
+				<div style="Margin-left: 20px; Margin-right: 20px; Margin-top: 5px;">
+				</div>
+				<div style="Margin-left: 20px; Margin-right: 20px;\">
+				<p style="Margin-top: 0; Margin-bottom: 0; font-style: normal; font-weight: bold; font-size: 24px; line-height: 32px; color: #44a8c7; text-align: center;" th:text="${titulo}"></p>
+				<p style="font-size: 16px; line-height: 24px;">				
+				Ud. posee una entrega de la actividad: [[${actividad}]]<br/>
+				efectuada por: [[${persona}]]<br/>
+				Correspondiente al aula virtual: [[${aula}]]<br/>
+				Para visualizar la entrega presione el siguiente enlace <a th:href="@{${ref}}">Ver Actividad</a><br/>				
+				</p>
+							
+				<p style="font-size: 14px; line-height: 24px;">
+					Un saludo cordial.
+                    <br><br>
+				    Centro IRC (Centro de capacitación y desarrollo de tecnologías de la información y comunicación). Secretaría de Extensión y Desarrollo de la UNRC.
+				 
+				</p>
+				</div>
+				</td>
+				</tr>
+				</tbody>
+				</table>
+
+				<table style="border-collapse: collapse; table-layout: fixed; Margin-right: auto; Margin-left: auto; border-spacing: 0"; width="600" align="center">
+				<tbody>
+				<tr>
+				<td style="padding: 0 0 40px 0;">
+				<table width="400" style='border-collapse: collapse; table-layout: fixed; border-spacing: 0; color: #b9b9b9; font-family:\"Open Sans\",sans-serif;'>
+				<tbody>
+				<tr>
+				<td style="padding: 0; font-size: 12px; line-height: 19px;">
+
+				<div style="Margin-top: 26px;">
+				<div>Nos puede contactar por los siguiente medios:<br />
+					tel&#233;fono: [[${telefono}]]<br />
+				    correo: [[${correo}]]<br/> 
+				     o en nuestra oficina: [[${oficina}]]. Campus de la [[${siglaInstitucion}]]
+				</div>
+				</div>
+
+				<div class="footer__permission" style="Margin-top: 18px;">
+				<div>&#169; 2001- [[${anio}]]&nbsp;[[${nombreInstitucion}]]&nbsp;&#8226; Versión; [[${version}]]&nbsp;</div>
+				</div>
+
+				</td>
+				</tr>
+				</tbody>
+				</table>
+
+				</td>
+			</tr>
+			</tbody>
+			</table>				
+		</div>    
+    </body>
+</html>

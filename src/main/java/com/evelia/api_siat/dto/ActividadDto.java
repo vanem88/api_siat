@@ -10,14 +10,8 @@ public class ActividadDto implements Serializable {
     private String descripcion;
     private Timestamp fechaApertura;
     private Timestamp fechaCierre;
-    //private Long tipoCalificacionId;
-    //private Long tipoActividadId;
-    //private String alcance;
-   // private String paraQuien;
-    //private String modoRespuesta;
     private boolean borrador;
     private String detalles;
-    //private Long notaAprobarId;
     private String persona;
     private String pathFotoPerfil;
     private String archivoAdjunto;
@@ -47,36 +41,6 @@ public class ActividadDto implements Serializable {
 	public void setFechaCierre(Timestamp fechaCierre) {
 		this.fechaCierre = fechaCierre;
 	}
-	/*public Long getTipoCalificacionId() {
-		return tipoCalificacionId;
-	}
-	public void setTipoCalificacionId(Long tipoCalificacionId) {
-		this.tipoCalificacionId = tipoCalificacionId;
-	}
-	public Long getTipoActividadId() {
-		return tipoActividadId;
-	}
-	public void setTipoActividadId(Long tipoActividadId) {
-		this.tipoActividadId = tipoActividadId;
-	}
-	public String getAlcance() {
-		return alcance;
-	}
-	public void setAlcance(String alcance) {
-		this.alcance = alcance;
-	}
-	public String getParaQuien() {
-		return paraQuien;
-	}
-	public void setParaQuien(String paraQuien) {
-		this.paraQuien = paraQuien;
-	}
-	public String getModoRespuesta() {
-		return modoRespuesta;
-	}
-	public void setModoRespuesta(String modoRespuesta) {
-		this.modoRespuesta = modoRespuesta;
-	}*/
 	public boolean isBorrador() {
 		return borrador;
 	}
@@ -89,13 +53,7 @@ public class ActividadDto implements Serializable {
 	public void setDetalles(String detalles) {
 		this.detalles = detalles;
 	}
-	/*public Long getNotaAprobarId() {
-		return notaAprobarId;
-	}
-	public void setNotaAprobarId(Long notaAprobarId) {
-		this.notaAprobarId = notaAprobarId;
-	}*/
-	
+
 	public String getArchivoAdjunto() {
 		return archivoAdjunto;
 	}

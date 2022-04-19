@@ -11,7 +11,6 @@ public class Util_Fechas {
 	 * @return
 	 */
 	  public static String hoyFechaHoraString(){
-	    //COMENTADO PARA QUE COMPILE
 	    java.sql.Timestamp hoyTimeStamp = hoySqlDate();
 	    SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH_mm_ss a");
 	    return formatDate.format(hoyTimeStamp);

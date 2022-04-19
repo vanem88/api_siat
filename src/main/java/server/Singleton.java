@@ -10,11 +10,8 @@ public class Singleton {
   
   /**---------------------------------- SERVER PRUEBA (prueba.evelia.unrc.edu.ar) ------------------------------------------------------------------------------**/
   
-  //static public final String HOME_DIR_RELATIVO = "/siat2/";
-  //static public final String HOME_DIR = "C:\\desarrolloVane\\api_siat\\";
-   
- 
-   //static public final String HOME_DIR_RELATIVO = "/montagna/";
+ // static public final String HOME_DIR = "C:\\desarrolloVane\\api_siat\\";
+  
    static public final String HOME_DIR = "/var/lib/tomcat9/webapps/api_siat/WEB-INF/classes";
     
 	/**---------------------------------- LOCAL (ambiente de desarrollo, localhost) ------------------------------------------------------------------------------**/
